@@ -14,6 +14,17 @@ from app.schemas.assistant import (
     UserPreferenceUpdate,
 )
 from app.schemas.analytics import AnalyticsSummaryResponse, HealthScoreResponse, SpendingForecastPoint
+from app.schemas.automation import (
+    AutomationInsightsResponse,
+    GoalPlanRequest,
+    GoalPlanResponse,
+    LoanEmiRequest,
+    LoanEmiResponse,
+    RetirementPlanRequest,
+    RetirementPlanResponse,
+    SipProjectionRequest,
+    SipProjectionResponse,
+)
 from app.schemas.budget import BudgetCreate, BudgetRead
 from app.schemas.transaction import TransactionCreate, TransactionRead
 
@@ -26,6 +37,7 @@ __all__ = [
     "AssistantTaskRead",
     "AssistantTaskUpdate",
     "AnalyticsSummaryResponse",
+    "AutomationInsightsResponse",
     "HealthScoreResponse",
     "SpendingForecastPoint",
     "BudgetCreate",
@@ -34,6 +46,14 @@ __all__ = [
     "DonationRead",
     "FeedbackCreate",
     "FeedbackRead",
+    "GoalPlanRequest",
+    "GoalPlanResponse",
+    "LoanEmiRequest",
+    "LoanEmiResponse",
+    "RetirementPlanRequest",
+    "RetirementPlanResponse",
+    "SipProjectionRequest",
+    "SipProjectionResponse",
     "TransactionCreate",
     "TransactionRead",
     "UserPreferenceRead",

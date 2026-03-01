@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 
 import api from './api/client';
 import AssistantHub from './components/AssistantHub';
+import AutomationLab from './components/AutomationLab';
 import BudgetPanel from './components/BudgetPanel';
 import ChartsPanel from './components/ChartsPanel';
 import StatCard from './components/StatCard';
@@ -144,6 +145,10 @@ export default function App() {
 
         <section className="panel">
           <AssistantHub onError={reportError} onDataMutation={refreshAll} />
+        </section>
+
+        <section className="panel span-2">
+          <AutomationLab onError={reportError} />
         </section>
 
         <section className="panel span-2">

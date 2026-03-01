@@ -13,6 +13,13 @@ FinGenie is an AI-powered personal finance manager with a React dashboard, FastA
   - user customization and preference management
   - feedback and suggestions intake
   - donation pledges and recurring donation planning
+- AI/ML/DL finance enhancement layer:
+  - ML anomaly detection for unusual expenses (Isolation Forest)
+  - recurring expense automation detection
+  - ML net-savings prediction (Random Forest)
+  - DL net-savings prediction (LSTM, with fallback)
+  - budget optimization engine for target savings rate
+  - finance calculators: EMI, SIP, goal planner, retirement corpus
 - Analytics dashboard with charts, insights, and financial health score
 
 ## Tech Stack
@@ -35,6 +42,11 @@ FinGenie is an AI-powered personal finance manager with a React dashboard, FastA
 - `GET|POST|PATCH /api/assistant/tasks` automation task operations
 - `GET|POST /api/assistant/feedback` feedback + suggestions intake
 - `GET|POST /api/assistant/donations` donation pledge tracking
+- `GET /api/automation/insights` run AI/ML/DL automation insights
+- `POST /api/automation/calculate/loan-emi` EMI calculator
+- `POST /api/automation/calculate/sip` SIP projection
+- `POST /api/automation/calculate/goal-plan` goal planner
+- `POST /api/automation/calculate/retirement` retirement corpus estimator
 - `POST /api/demo/seed` load demo data
 
 ## Run with Docker

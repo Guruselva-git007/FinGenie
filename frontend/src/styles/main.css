@@ -370,6 +370,77 @@ button.secondary {
   min-width: 128px;
 }
 
+.automation-lab {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.panel-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.automation-grid {
+  display: grid;
+  gap: 0.7rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.auto-card {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: #fbfcfe;
+  padding: 0.75rem;
+}
+
+.auto-card h4 {
+  margin-bottom: 0.55rem;
+}
+
+.auto-row {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: #fff;
+  padding: 0.5rem 0.55rem;
+  margin-bottom: 0.45rem;
+}
+
+.auto-row p {
+  font-size: 0.86rem;
+  margin-top: 0.22rem;
+}
+
+.auto-mini {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 0.42rem 0.55rem;
+  margin-bottom: 0.45rem;
+  background: #fff;
+}
+
+.budget-plan-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.55rem;
+  margin: 0.6rem 0;
+}
+
+.calculator-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.7rem;
+}
+
+.calculator {
+  display: grid;
+  gap: 0.5rem;
+}
+
 .table-wrap {
   overflow-x: auto;
 }
@@ -433,6 +504,9 @@ td.empty {
   .stats-row,
   .main-grid,
   .charts-grid,
+  .automation-grid,
+  .budget-plan-grid,
+  .calculator-grid,
   .two-col,
   .inline-form,
   .span-2 {
