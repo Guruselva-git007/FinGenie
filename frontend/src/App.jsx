@@ -1,15 +1,27 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 
 import api from './api/client';
 import AssistantHub from './components/AssistantHub';
 import AutomationLab from './components/AutomationLab';
 import BudgetPanel from './components/BudgetPanel';
 import ChartsPanel from './components/ChartsPanel';
-import StatCard from './components/StatCard';
+import HomeOverview from './components/HomeOverview';
+import SettingsPage from './components/SettingsPage';
 import TransactionForm from './components/TransactionForm';
 import TransactionTable from './components/TransactionTable';
 
+const sections = [
+  { key: 'home', label: 'Home', icon: 'HM' },
+  { key: 'analytics', label: 'Analytics', icon: 'AN' },
+  { key: 'assistant', label: 'Assistant', icon: 'AI' },
+  { key: 'automation', label: 'Automation', icon: 'ML' },
+  { key: 'transactions', label: 'Transactions', icon: 'TX' },
+  { key: 'settings', label: 'Settings', icon: 'ST' },
+];
+
 export default function App() {
+  const [activeSection, setActiveSection] = useState('home');
+
   const [transactions, setTransactions] = useState([]);
   const [budgets, setBudgets] = useState([]);
   const [summary, setSummary] = useState(null);
@@ -19,6 +31,13 @@ export default function App() {
   const [savingBudget, setSavingBudget] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+
+  const health = summary?.financial_health;
+
+  const sectionTitle = useMemo(
+    () => sections.find((section) => section.key === activeSection)?.label || 'Home',
+    [activeSection]
+  );
 
   const refreshAll = async () => {
     setLoading(true);
@@ -85,15 +104,86 @@ export default function App() {
     }
   };
 
-  const health = summary?.financial_health;
-
   const reportError = (message) => {
     setError(message);
   };
 
+  const renderSection = () => {
+    if (loading && activeSection !== 'settings') {
+      return (
+        <section className="panel">
+          <h3>Loading...</h3>
+          <p className="muted">Preparing your finance workspace.</p>
+        </section>
+      );
+    }
+
+    switch (activeSection) {
+      case 'home':
+        return (
+          <HomeOverview
+            summary={summary}
+            health={health}
+            transactions={transactions}
+            onOpenSection={setActiveSection}
+            quickTransactionForm={<TransactionForm onSubmit={submitTransaction} submitting={submittingTx} />}
+          />
+        );
+      case 'analytics':
+        return (
+          <div className="section-stack">
+            <section className="panel">
+              <h3>Analytics Dashboard</h3>
+              <ChartsPanel summary={summary} />
+              {summary && (
+                <div className="insights">
+                  <h4>Insights</h4>
+                  <ul>
+                    {summary.insights.map((insight) => (
+                      <li key={insight}>{insight}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </section>
+            <section className="panel">
+              <BudgetPanel budgets={budgets} smartPlan={smartPlan} onSaveBudget={saveBudget} loading={savingBudget} />
+            </section>
+          </div>
+        );
+      case 'assistant':
+        return (
+          <section className="panel">
+            <AssistantHub onError={reportError} onDataMutation={refreshAll} />
+          </section>
+        );
+      case 'automation':
+        return (
+          <section className="panel">
+            <AutomationLab onError={reportError} />
+          </section>
+        );
+      case 'transactions':
+        return (
+          <div className="section-stack">
+            <section className="panel">
+              <TransactionForm onSubmit={submitTransaction} submitting={submittingTx} />
+            </section>
+            <section className="panel">
+              <TransactionTable transactions={transactions} />
+            </section>
+          </div>
+        );
+      case 'settings':
+        return <SettingsPage onError={reportError} />;
+      default:
+        return null;
+    }
+  };
+
   return (
-    <div className="app-shell">
-      <header className="topbar">
+    <div className="app-shell sectioned-shell">
+      <header className="topbar sectioned-topbar">
         <div>
           <p className="eyebrow">AI Powered Personal Finance Manager</p>
           <h1>FinGenie</h1>
@@ -104,57 +194,29 @@ export default function App() {
         </div>
       </header>
 
+      <section className="section-nav-wrap">
+        <div className="section-nav-header">
+          <h2>{sectionTitle}</h2>
+          <p className="muted">Navigate using icon tabs to keep each feature focused and uncluttered.</p>
+        </div>
+        <nav className="section-nav" aria-label="App Sections">
+          {sections.map((section) => (
+            <button
+              key={section.key}
+              className={`section-tab ${activeSection === section.key ? 'active' : ''}`}
+              onClick={() => setActiveSection(section.key)}
+              aria-current={activeSection === section.key ? 'page' : undefined}
+            >
+              <span className="section-tab-icon">{section.icon}</span>
+              <span>{section.label}</span>
+            </button>
+          ))}
+        </nav>
+      </section>
+
       {error && <div className="error-banner">{error}</div>}
 
-      {summary && (
-        <section className="stats-row">
-          <StatCard label="Total Income" value={summary.income_total} tone="positive" />
-          <StatCard label="Total Expenses" value={summary.expense_total} tone="negative" />
-          <StatCard label="Net Cashflow" value={summary.net_cashflow} tone={summary.net_cashflow >= 0 ? 'positive' : 'negative'} />
-          <div className="stat-card tone-neutral">
-            <p className="stat-label">Financial Health Score</p>
-            <h3 className="stat-value">{health?.score ?? 0}/100</h3>
-            <p className="muted">{health?.status ?? 'Unknown'}</p>
-          </div>
-        </section>
-      )}
-
-      <main className="main-grid">
-        <section className="panel">
-          <TransactionForm onSubmit={submitTransaction} submitting={submittingTx} />
-        </section>
-
-        <section className="panel">
-          <BudgetPanel budgets={budgets} smartPlan={smartPlan} onSaveBudget={saveBudget} loading={savingBudget} />
-        </section>
-
-        <section className="panel span-2">
-          <h3>Analytics Dashboard</h3>
-          {loading ? <p className="muted">Loading analytics...</p> : <ChartsPanel summary={summary} />}
-          {summary && (
-            <div className="insights">
-              <h4>Insights</h4>
-              <ul>
-                {summary.insights.map((insight) => (
-                  <li key={insight}>{insight}</li>
-                ))}
-              </ul>
-            </div>
-          )}
-        </section>
-
-        <section className="panel">
-          <AssistantHub onError={reportError} onDataMutation={refreshAll} />
-        </section>
-
-        <section className="panel span-2">
-          <AutomationLab onError={reportError} />
-        </section>
-
-        <section className="panel span-2">
-          <TransactionTable transactions={transactions} />
-        </section>
-      </main>
+      <main className="section-main">{renderSection()}</main>
     </div>
   );
 }

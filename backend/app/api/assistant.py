@@ -20,6 +20,8 @@ from app.schemas.assistant import (
     FeedbackRead,
     UserPreferenceRead,
     UserPreferenceUpdate,
+    UserProfileRead,
+    UserProfileUpdate,
 )
 from app.services.analytics_service import build_analytics_summary
 from app.services.assistant_service import (
@@ -27,6 +29,7 @@ from app.services.assistant_service import (
     create_task,
     generate_assistant_response,
     get_or_create_preferences,
+    get_or_create_profile,
     list_tasks_query,
     _detect_feedback_sentiment,
 )
@@ -51,6 +54,36 @@ def update_preferences(payload: UserPreferenceUpdate, db: Session = Depends(get_
     db.commit()
     db.refresh(pref)
     return pref
+
+
+@router.get("/profile", response_model=UserProfileRead)
+def get_profile(db: Session = Depends(get_db_session)):
+    return get_or_create_profile(db)
+
+
+@router.put("/profile", response_model=UserProfileRead)
+def update_profile(payload: UserProfileUpdate, db: Session = Depends(get_db_session)):
+    profile = get_or_create_profile(db)
+
+    profile.full_name = payload.full_name
+    profile.email = payload.email
+    profile.phone = payload.phone
+    profile.country = payload.country
+    profile.city = payload.city
+    profile.timezone = payload.timezone
+    profile.occupation = payload.occupation
+    profile.monthly_income_goal = payload.monthly_income_goal
+    profile.annual_income_goal = payload.annual_income_goal
+    profile.username = payload.username
+    profile.account_tier = payload.account_tier
+    profile.language = payload.language
+    profile.two_factor_enabled = payload.two_factor_enabled
+    profile.marketing_opt_in = payload.marketing_opt_in
+
+    db.add(profile)
+    db.commit()
+    db.refresh(profile)
+    return profile
 
 
 @router.get("/tasks", response_model=list[AssistantTaskRead])

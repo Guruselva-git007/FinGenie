@@ -12,6 +12,8 @@ from app.schemas.assistant import (
     FeedbackRead,
     UserPreferenceRead,
     UserPreferenceUpdate,
+    UserProfileRead,
+    UserProfileUpdate,
 )
 from app.schemas.analytics import AnalyticsSummaryResponse, HealthScoreResponse, SpendingForecastPoint
 from app.schemas.automation import (
@@ -74,4 +76,6 @@ __all__ = [
     "TransactionRead",
     "UserPreferenceRead",
     "UserPreferenceUpdate",
+    "UserProfileRead",
+    "UserProfileUpdate",
 ]

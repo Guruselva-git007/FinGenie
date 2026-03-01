@@ -4,6 +4,7 @@ from app.models.donation import Donation
 from app.models.feedback_entry import FeedbackEntry
 from app.models.transaction import Transaction, TransactionKind
 from app.models.user_preference import UserPreference
+from app.models.user_profile import UserProfile
 
 __all__ = [
     "AssistantTask",
@@ -15,4 +16,5 @@ __all__ = [
     "Transaction",
     "TransactionKind",
     "UserPreference",
+    "UserProfile",
 ]

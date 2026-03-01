@@ -5,7 +5,7 @@ from app.api.router import api_router
 from app.core.config import settings
 from app.db.base import Base
 from app.db.session import engine
-from app.models import assistant_task, budget, donation, feedback_entry, transaction, user_preference  # noqa: F401
+from app.models import assistant_task, budget, donation, feedback_entry, transaction, user_preference, user_profile  # noqa: F401
 
 app = FastAPI(title=settings.app_name, version=settings.app_version)
 

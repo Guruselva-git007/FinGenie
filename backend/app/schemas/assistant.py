@@ -67,6 +67,31 @@ class UserPreferenceRead(UserPreferenceUpdate):
     model_config = {"from_attributes": True}
 
 
+class UserProfileUpdate(BaseModel):
+    full_name: str = Field(default="FinGenie User", min_length=2, max_length=120)
+    email: str = Field(default="user@example.com", min_length=5, max_length=180)
+    phone: str = Field(default="", max_length=40)
+    country: str = Field(default="", max_length=80)
+    city: str = Field(default="", max_length=80)
+    timezone: str = Field(default="Asia/Kolkata", max_length=80)
+    occupation: str = Field(default="", max_length=120)
+    monthly_income_goal: float = Field(default=5000.0, ge=0)
+    annual_income_goal: float = Field(default=60000.0, ge=0)
+    username: str = Field(default="fingenie_user", min_length=3, max_length=80)
+    account_tier: str = Field(default="pro", min_length=2, max_length=40)
+    language: str = Field(default="en-US", min_length=2, max_length=40)
+    two_factor_enabled: bool = False
+    marketing_opt_in: bool = False
+
+
+class UserProfileRead(UserProfileUpdate):
+    id: int
+    created_at: datetime
+    updated_at: datetime
+
+    model_config = {"from_attributes": True}
+
+
 class FeedbackCreate(BaseModel):
     category: str = Field(default="general", min_length=2, max_length=40)
     message: str = Field(min_length=5, max_length=2000)

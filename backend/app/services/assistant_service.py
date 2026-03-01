@@ -10,6 +10,7 @@ from app.models.assistant_task import AssistantTask, TaskPriority, TaskStatus
 from app.models.donation import Donation
 from app.models.feedback_entry import FeedbackEntry
 from app.models.user_preference import UserPreference
+from app.models.user_profile import UserProfile
 
 
 CURRENCY_CODES = {"USD", "EUR", "GBP", "INR", "JPY", "CAD", "AUD", "SGD"}
@@ -95,6 +96,18 @@ def get_or_create_preferences(db: Session) -> UserPreference:
     db.commit()
     db.refresh(pref)
     return pref
+
+
+def get_or_create_profile(db: Session) -> UserProfile:
+    profile = db.scalar(select(UserProfile).order_by(UserProfile.id))
+    if profile:
+        return profile
+
+    profile = UserProfile()
+    db.add(profile)
+    db.commit()
+    db.refresh(profile)
+    return profile
 
 
 def list_tasks_query(limit: int = 50) -> Select[tuple[AssistantTask]]:
