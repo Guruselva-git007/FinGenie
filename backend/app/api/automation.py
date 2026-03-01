@@ -7,21 +7,33 @@ from app.models.budget import Budget
 from app.models.transaction import Transaction
 from app.schemas.automation import (
     AutomationInsightsResponse,
+    DebtPayoffRequest,
+    DebtPayoffResponse,
+    EmergencyFundRequest,
+    EmergencyFundResponse,
     GoalPlanRequest,
     GoalPlanResponse,
     LoanEmiRequest,
     LoanEmiResponse,
+    NetWorthProjectionRequest,
+    NetWorthProjectionResponse,
     RetirementPlanRequest,
     RetirementPlanResponse,
     SipProjectionRequest,
     SipProjectionResponse,
+    TaxSetAsideRequest,
+    TaxSetAsideResponse,
 )
 from app.services.automation_service import build_automation_insights
 from app.services.calculation_service import (
+    calculate_debt_payoff,
+    calculate_emergency_fund,
     calculate_goal_plan,
     calculate_loan_emi,
+    calculate_net_worth_projection,
     calculate_retirement_plan,
     calculate_sip_projection,
+    calculate_tax_set_aside,
 )
 
 router = APIRouter(prefix="/automation", tags=["automation"])
@@ -71,4 +83,47 @@ def retirement_plan(payload: RetirementPlanRequest):
         inflation_rate=payload.inflation_rate,
         post_retirement_return_rate=payload.post_retirement_return_rate,
         life_expectancy=payload.life_expectancy,
+    )
+
+
+@router.post("/calculate/debt-payoff", response_model=DebtPayoffResponse)
+def debt_payoff(payload: DebtPayoffRequest):
+    debts = [debt.model_dump() for debt in payload.debts]
+    return calculate_debt_payoff(
+        debts=debts,
+        strategy=payload.strategy,
+        extra_payment=payload.extra_payment,
+    )
+
+
+@router.post("/calculate/tax-setaside", response_model=TaxSetAsideResponse)
+def tax_setaside(payload: TaxSetAsideRequest):
+    return calculate_tax_set_aside(
+        monthly_income=payload.monthly_income,
+        effective_tax_rate=payload.effective_tax_rate,
+        safety_buffer_pct=payload.safety_buffer_pct,
+    )
+
+
+@router.post("/calculate/emergency-fund", response_model=EmergencyFundResponse)
+def emergency_fund(payload: EmergencyFundRequest):
+    return calculate_emergency_fund(
+        current_fund=payload.current_fund,
+        monthly_expense=payload.monthly_expense,
+        target_months=payload.target_months,
+        monthly_contribution=payload.monthly_contribution,
+        annual_return_rate=payload.annual_return_rate,
+    )
+
+
+@router.post("/calculate/networth-projection", response_model=NetWorthProjectionResponse)
+def networth_projection(payload: NetWorthProjectionRequest):
+    return calculate_net_worth_projection(
+        current_assets=payload.current_assets,
+        current_liabilities=payload.current_liabilities,
+        monthly_investment=payload.monthly_investment,
+        annual_return_rate=payload.annual_return_rate,
+        months=payload.months,
+        monthly_liability_payment=payload.monthly_liability_payment,
+        liability_interest_rate=payload.liability_interest_rate,
     )

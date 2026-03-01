@@ -245,10 +245,15 @@ def generate_assistant_response(
             "Use feedback entries to log friction points. I can convert feedback into prioritized tasks and "
             "track closure over time."
         )
+    elif "debt" in lowered or "tax" in lowered or "retirement" in lowered:
+        answer = (
+            "Use the Automation Lab for advanced planning: debt payoff (avalanche/snowball), tax set-aside, "
+            "retirement corpus, emergency fund runway, and net-worth projection."
+        )
     else:
         answer = (
             "I am your FinGenie assistant. Ask for budgeting, savings, forecasting, automation tasks, "
-            "preferences, donations, or product feedback workflows."
+            "preferences, donations, debt/tax planning, or product feedback workflows."
         )
 
     action_items = [

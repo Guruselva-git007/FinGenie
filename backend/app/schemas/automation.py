@@ -21,6 +21,31 @@ class RecurringExpenseItem(BaseModel):
     confidence: float
 
 
+class SubscriptionOpportunityItem(BaseModel):
+    description: str
+    category: str
+    monthly_cost: float
+    annual_cost: float
+    action: str
+    priority: str
+
+
+class BillCalendarItem(BaseModel):
+    description: str
+    category: str
+    amount: float
+    due_date: str
+    days_left: int
+    urgency: str
+
+
+class EnvelopeJarItem(BaseModel):
+    jar: str
+    target_amount: float
+    actual_amount: float
+    utilization_pct: float
+
+
 class SavingsPredictionItem(BaseModel):
     month: str
     predicted_net_savings: float
@@ -45,6 +70,10 @@ class BudgetOptimizationResponse(BaseModel):
 class AutomationInsightsResponse(BaseModel):
     anomalies: list[AnomalyItem]
     recurring_expenses: list[RecurringExpenseItem]
+    subscription_opportunities: list[SubscriptionOpportunityItem]
+    bill_calendar: list[BillCalendarItem]
+    envelope_jars: list[EnvelopeJarItem]
+    behavior_nudges: list[str]
     savings_prediction_ml: list[SavingsPredictionItem]
     savings_prediction_dl: list[SavingsPredictionItem]
     budget_optimization: BudgetOptimizationResponse
@@ -105,3 +134,76 @@ class RetirementPlanResponse(BaseModel):
     required_retirement_corpus: float
     years_to_retire: int
     years_in_retirement: int
+
+
+class DebtInput(BaseModel):
+    name: str = Field(min_length=2, max_length=80)
+    balance: float = Field(gt=0)
+    annual_rate: float = Field(ge=0)
+    min_payment: float = Field(gt=0)
+
+
+class DebtPayoffRequest(BaseModel):
+    debts: list[DebtInput] = Field(min_length=1)
+    strategy: str = Field(default="avalanche")
+    extra_payment: float = Field(default=0.0, ge=0)
+
+
+class DebtPayoffResponse(BaseModel):
+    strategy: str
+    months_to_debt_free: int
+    projected_payoff_date: str
+    total_interest_paid: float
+    total_paid: float
+    payoff_order: list[str]
+
+
+class TaxSetAsideRequest(BaseModel):
+    monthly_income: float = Field(gt=0)
+    effective_tax_rate: float = Field(ge=0, le=80)
+    safety_buffer_pct: float = Field(default=10.0, ge=0, le=100)
+
+
+class TaxSetAsideResponse(BaseModel):
+    monthly_tax_set_aside: float
+    quarterly_tax_set_aside: float
+    annual_tax_set_aside: float
+
+
+class EmergencyFundRequest(BaseModel):
+    current_fund: float = Field(default=0.0, ge=0)
+    monthly_expense: float = Field(gt=0)
+    target_months: int = Field(default=6, ge=1, le=24)
+    monthly_contribution: float = Field(gt=0)
+    annual_return_rate: float = Field(default=0.0, ge=0, le=30)
+
+
+class EmergencyFundResponse(BaseModel):
+    target_fund: float
+    current_fund: float
+    funding_gap: float
+    months_to_target: int
+    projected_completion_value: float
+
+
+class NetWorthProjectionRequest(BaseModel):
+    current_assets: float = Field(ge=0)
+    current_liabilities: float = Field(ge=0)
+    monthly_investment: float = Field(ge=0)
+    annual_return_rate: float = Field(default=8.0, ge=0, le=30)
+    months: int = Field(default=24, ge=1, le=120)
+    monthly_liability_payment: float = Field(default=0.0, ge=0)
+    liability_interest_rate: float = Field(default=0.0, ge=0, le=30)
+
+
+class NetWorthPoint(BaseModel):
+    month_index: int
+    assets: float
+    liabilities: float
+    net_worth: float
+
+
+class NetWorthProjectionResponse(BaseModel):
+    start_net_worth: float
+    projected_net_worth: float
+    projection: list[NetWorthPoint]

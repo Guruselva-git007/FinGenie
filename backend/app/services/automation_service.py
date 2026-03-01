@@ -367,6 +367,10 @@ def build_automation_insights(
 ) -> dict:
     anomalies = detect_spending_anomalies(transactions)
     recurring = detect_recurring_expenses(transactions)
+    subscription_opportunities = build_subscription_opportunities(recurring)
+    bill_calendar = build_bill_calendar(recurring, horizon_days=60)
+    envelope_jars = build_envelope_jars(transactions)
+    behavior_nudges = build_behavior_nudges(transactions, anomalies, recurring)
     savings_ml = predict_savings_ml(transactions, months=forecast_months)
     savings_dl = predict_savings_dl(transactions, months=forecast_months)
     optimization = optimize_budget_with_ml(transactions, budgets)
@@ -376,6 +380,8 @@ def build_automation_insights(
         auto_actions.append("Review flagged anomalies and confirm if each one is valid or suspicious.")
     if recurring:
         auto_actions.append("Convert recurring expenses into scheduled budget reservations before month start.")
+    if subscription_opportunities:
+        auto_actions.append("Trim low-value subscriptions and redirect savings to your emergency fund.")
     if optimization["monthly_reduction_needed"] > 0:
         auto_actions.append("Apply the suggested category cuts to reach your target savings rate.")
     if not auto_actions:
@@ -384,8 +390,174 @@ def build_automation_insights(
     return {
         "anomalies": anomalies,
         "recurring_expenses": recurring,
+        "subscription_opportunities": subscription_opportunities,
+        "bill_calendar": bill_calendar,
+        "envelope_jars": envelope_jars,
+        "behavior_nudges": behavior_nudges,
         "savings_prediction_ml": savings_ml,
         "savings_prediction_dl": savings_dl,
         "budget_optimization": optimization,
         "auto_actions": auto_actions,
     }
+
+
+def build_subscription_opportunities(recurring_expenses: list[dict], max_items: int = 8) -> list[dict]:
+    keywords = {
+        "netflix",
+        "spotify",
+        "apple",
+        "youtube",
+        "prime",
+        "subscription",
+        "membership",
+        "adobe",
+        "dropbox",
+        "gym",
+        "hulu",
+        "disney",
+    }
+
+    opportunities = []
+    for item in recurring_expenses:
+        name = item["description"].lower()
+        likely_subscription = (
+            item["cadence"] == "monthly"
+            and (
+                any(keyword in name for keyword in keywords)
+                or item["category"] in {"entertainment", "utilities", "shopping", "other", "healthcare"}
+            )
+        )
+        if not likely_subscription:
+            continue
+
+        annual_cost = item["amount"] * 12 if item["cadence"] == "monthly" else item["amount"] * 52
+        opportunities.append(
+            {
+                "description": item["description"],
+                "category": item["category"],
+                "monthly_cost": round(item["amount"], 2),
+                "annual_cost": round(annual_cost, 2),
+                "action": "Review usage, consider downgrade or cancellation.",
+                "priority": "high" if annual_cost >= 300 else "medium",
+            }
+        )
+
+    opportunities.sort(key=lambda row: row["annual_cost"], reverse=True)
+    return opportunities[:max_items]
+
+
+def build_bill_calendar(recurring_expenses: list[dict], horizon_days: int = 60) -> list[dict]:
+    today = date.today()
+    calendar_items: list[dict] = []
+
+    for item in recurring_expenses:
+        try:
+            due = date.fromisoformat(item["next_expected_date"])
+        except ValueError:
+            continue
+
+        days_left = (due - today).days
+        if days_left < 0 or days_left > horizon_days:
+            continue
+
+        if days_left <= 3:
+            urgency = "critical"
+        elif days_left <= 10:
+            urgency = "upcoming"
+        else:
+            urgency = "planned"
+
+        calendar_items.append(
+            {
+                "description": item["description"],
+                "category": item["category"],
+                "amount": item["amount"],
+                "due_date": due.isoformat(),
+                "days_left": days_left,
+                "urgency": urgency,
+            }
+        )
+
+    calendar_items.sort(key=lambda row: row["days_left"])
+    return calendar_items
+
+
+def build_envelope_jars(transactions: list[Transaction]) -> list[dict]:
+    monthly = _monthly_cashflow(transactions)
+    avg_income = float(np.mean([row["income"] for row in monthly])) if monthly else 0.0
+    avg_expense = float(np.mean([row["expense"] for row in monthly])) if monthly else 0.0
+
+    if avg_income <= 0:
+        avg_income = avg_expense if avg_expense > 0 else 1.0
+
+    category_spend = defaultdict(float)
+    month_count = len({_month_start(tx.transaction_date) for tx in transactions if tx.kind == TransactionKind.EXPENSE})
+    month_count = max(1, month_count)
+    for tx in transactions:
+        if tx.kind == TransactionKind.EXPENSE:
+            category_spend[tx.category] += float(tx.amount) / month_count
+
+    needs_categories = {"rent", "utilities", "groceries", "healthcare", "transport", "education"}
+    wants_categories = {"dining", "shopping", "entertainment", "travel", "other"}
+
+    needs_actual = sum(value for category, value in category_spend.items() if category in needs_categories)
+    wants_actual = sum(value for category, value in category_spend.items() if category in wants_categories)
+    savings_actual = max(0.0, avg_income - (needs_actual + wants_actual))
+
+    recommended = {
+        "needs": avg_income * 0.55,
+        "wants": avg_income * 0.25,
+        "savings": avg_income * 0.15,
+        "giving": avg_income * 0.05,
+    }
+
+    actual = {
+        "needs": needs_actual,
+        "wants": wants_actual,
+        "savings": savings_actual,
+        "giving": 0.0,
+    }
+
+    jars = []
+    for jar_name in ["needs", "wants", "savings", "giving"]:
+        target = recommended[jar_name]
+        spent = actual[jar_name]
+        utilization = 0.0 if target <= 0 else (spent / target) * 100
+        jars.append(
+            {
+                "jar": jar_name,
+                "target_amount": round(target, 2),
+                "actual_amount": round(spent, 2),
+                "utilization_pct": round(utilization, 2),
+            }
+        )
+
+    return jars
+
+
+def build_behavior_nudges(transactions: list[Transaction], anomalies: list[dict], recurring_expenses: list[dict]) -> list[str]:
+    today = date.today()
+    recent_expenses = [
+        tx for tx in transactions if tx.kind == TransactionKind.EXPENSE and (today - tx.transaction_date).days <= 30
+    ]
+
+    nudge_list: list[str] = []
+
+    if recent_expenses:
+        discretionary = {"dining", "shopping", "entertainment", "travel", "other"}
+        disc_total = sum(float(tx.amount) for tx in recent_expenses if tx.category in discretionary)
+        expense_total = sum(float(tx.amount) for tx in recent_expenses)
+        share = 0.0 if expense_total <= 0 else disc_total / expense_total
+        if share > 0.45:
+            nudge_list.append("Discretionary spending is high this month. Try a 48-hour pause rule before purchases.")
+
+    if anomalies:
+        nudge_list.append("Anomalies detected. Enable transaction alerts to verify unusual charges quickly.")
+
+    if len(recurring_expenses) >= 3:
+        nudge_list.append("You have several recurring payments. Bundle renewals into one weekly review session.")
+
+    if not nudge_list:
+        nudge_list.append("Great consistency. Keep a weekly money check-in to maintain momentum.")
+
+    return nudge_list

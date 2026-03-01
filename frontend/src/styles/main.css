@@ -385,7 +385,7 @@ button.secondary {
 .automation-grid {
   display: grid;
   gap: 0.7rem;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
 .auto-card {
@@ -432,13 +432,19 @@ button.secondary {
 
 .calculator-grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 0.7rem;
 }
 
 .calculator {
   display: grid;
   gap: 0.5rem;
+}
+
+.debt-row {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1fr 1fr;
+  gap: 0.45rem;
 }
 
 .table-wrap {
@@ -482,6 +488,11 @@ td.empty {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
+  .automation-grid,
+  .calculator-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .span-2 {
     grid-column: span 2;
   }
@@ -507,6 +518,7 @@ td.empty {
   .automation-grid,
   .budget-plan-grid,
   .calculator-grid,
+  .debt-row,
   .two-col,
   .inline-form,
   .span-2 {

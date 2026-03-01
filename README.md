@@ -16,10 +16,14 @@ FinGenie is an AI-powered personal finance manager with a React dashboard, FastA
 - AI/ML/DL finance enhancement layer:
   - ML anomaly detection for unusual expenses (Isolation Forest)
   - recurring expense automation detection
+  - subscription optimization opportunities + bill calendar
+  - envelope/jars budgeting recommendation engine
+  - behavioral finance nudges for habit improvement
   - ML net-savings prediction (Random Forest)
   - DL net-savings prediction (LSTM, with fallback)
   - budget optimization engine for target savings rate
   - finance calculators: EMI, SIP, goal planner, retirement corpus
+  - advanced calculators: debt payoff strategies, tax set-aside, emergency fund runway, net-worth projection
 - Analytics dashboard with charts, insights, and financial health score
 
 ## Tech Stack
@@ -47,6 +51,10 @@ FinGenie is an AI-powered personal finance manager with a React dashboard, FastA
 - `POST /api/automation/calculate/sip` SIP projection
 - `POST /api/automation/calculate/goal-plan` goal planner
 - `POST /api/automation/calculate/retirement` retirement corpus estimator
+- `POST /api/automation/calculate/debt-payoff` debt avalanche/snowball simulator
+- `POST /api/automation/calculate/tax-setaside` tax reserve estimator
+- `POST /api/automation/calculate/emergency-fund` emergency fund runway estimator
+- `POST /api/automation/calculate/networth-projection` net-worth projection engine
 - `POST /api/demo/seed` load demo data
 
 ## Run with Docker
@@ -85,3 +93,11 @@ FinGenie is an AI-powered personal finance manager with a React dashboard, FastA
 - MySQL setup script uses TCP and supports special-character passwords via environment variables.
 - LSTM forecast falls back to moving-average when historical data is not enough.
 - On Python 3.13+, TensorFlow may be unavailable; FinGenie still runs with automatic moving-average fallback forecasting.
+
+## Feature Inspiration Sources
+- [YNAB](https://www.ynab.com/) for envelope-style budgeting and intentional spending workflow.
+- [Goodbudget](https://goodbudget.com/) for envelope budgeting structure.
+- [Monzo](https://monzo.com/) for pots/jars style goal buckets and simple UX patterns.
+- [Rocket Money](https://www.rocketmoney.com/) for subscription review/cancellation inspiration.
+- [Monarch Money](https://www.monarchmoney.com/) for recurring transaction awareness and planning.
+- [Copilot Money](https://copilot.money/) for net-worth and habit-driven financial workflows.
