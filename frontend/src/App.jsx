@@ -1,14 +1,15 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { Suspense, lazy, useCallback, useEffect, useMemo, useState } from 'react';
 
 import api from './api/client';
-import AssistantHub from './components/AssistantHub';
-import AutomationLab from './components/AutomationLab';
-import BudgetPanel from './components/BudgetPanel';
-import ChartsPanel from './components/ChartsPanel';
 import HomeOverview from './components/HomeOverview';
-import SettingsPage from './components/SettingsPage';
 import TransactionForm from './components/TransactionForm';
-import TransactionTable from './components/TransactionTable';
+
+const AssistantHub = lazy(() => import('./components/AssistantHub'));
+const AutomationLab = lazy(() => import('./components/AutomationLab'));
+const BudgetPanel = lazy(() => import('./components/BudgetPanel'));
+const ChartsPanel = lazy(() => import('./components/ChartsPanel'));
+const SettingsPage = lazy(() => import('./components/SettingsPage'));
+const TransactionTable = lazy(() => import('./components/TransactionTable'));
 
 const sections = [
   { key: 'home', label: 'Home', icon: 'HM' },
@@ -19,6 +20,8 @@ const sections = [
   { key: 'settings', label: 'Settings', icon: 'ST' },
 ];
 
+const CORE_SECTION_KEYS = new Set(['home', 'analytics', 'transactions']);
+
 export default function App() {
   const [activeSection, setActiveSection] = useState('home');
 
@@ -26,10 +29,12 @@ export default function App() {
   const [budgets, setBudgets] = useState([]);
   const [summary, setSummary] = useState(null);
   const [smartPlan, setSmartPlan] = useState(null);
+  const [analyticsLoaded, setAnalyticsLoaded] = useState(false);
 
   const [submittingTx, setSubmittingTx] = useState(false);
   const [savingBudget, setSavingBudget] = useState(false);
-  const [loading, setLoading] = useState(true);
+  const [loadingCore, setLoadingCore] = useState(true);
+  const [loadingAnalytics, setLoadingAnalytics] = useState(false);
   const [error, setError] = useState('');
 
   const health = summary?.financial_health;
@@ -39,38 +44,69 @@ export default function App() {
     [activeSection]
   );
 
-  const refreshAll = async () => {
-    setLoading(true);
+  const refreshCore = useCallback(async () => {
+    setLoadingCore(true);
     setError('');
     try {
-      const [txRes, budgetRes, summaryRes, smartRes] = await Promise.all([
+      const [txRes, summaryRes] = await Promise.all([
         api.get('/transactions?limit=100'),
-        api.get('/budgets'),
         api.get('/analytics/summary?forecast_months=4'),
-        api.get('/budgets/smart-plan'),
       ]);
       setTransactions(txRes.data);
-      setBudgets(budgetRes.data);
       setSummary(summaryRes.data);
-      setSmartPlan(smartRes.data);
     } catch (err) {
       const message = err?.response?.data?.detail || err.message || 'Unable to load FinGenie data.';
       setError(message);
     } finally {
-      setLoading(false);
+      setLoadingCore(false);
     }
-  };
+  }, []);
+
+  const refreshAnalytics = useCallback(async () => {
+    setLoadingAnalytics(true);
+    setError('');
+    try {
+      const [budgetRes, smartRes] = await Promise.all([
+        api.get('/budgets'),
+        api.get('/budgets/smart-plan'),
+      ]);
+      setBudgets(budgetRes.data);
+      setSmartPlan(smartRes.data);
+      setAnalyticsLoaded(true);
+    } catch (err) {
+      const message = err?.response?.data?.detail || err.message || 'Unable to load analytics modules.';
+      setError(message);
+    } finally {
+      setLoadingAnalytics(false);
+    }
+  }, []);
 
   useEffect(() => {
-    refreshAll();
-  }, []);
+    refreshCore();
+  }, [refreshCore]);
+
+  useEffect(() => {
+    if (activeSection === 'analytics' && !analyticsLoaded && !loadingAnalytics) {
+      refreshAnalytics();
+    }
+  }, [activeSection, analyticsLoaded, loadingAnalytics, refreshAnalytics]);
+
+  const refreshVisibleData = useCallback(async () => {
+    await Promise.all([
+      refreshCore(),
+      analyticsLoaded ? refreshAnalytics() : Promise.resolve(),
+    ]);
+  }, [analyticsLoaded, refreshAnalytics, refreshCore]);
 
   const submitTransaction = async (payload) => {
     setSubmittingTx(true);
     setError('');
     try {
       await api.post('/transactions', payload);
-      await refreshAll();
+      await Promise.all([
+        refreshCore(),
+        analyticsLoaded ? refreshAnalytics() : Promise.resolve(),
+      ]);
     } catch (err) {
       const message = err?.response?.data?.detail || err.message || 'Failed to add transaction.';
       setError(message);
@@ -84,7 +120,10 @@ export default function App() {
     setError('');
     try {
       await api.post('/budgets', payload);
-      await refreshAll();
+      await Promise.all([
+        refreshCore(),
+        refreshAnalytics(),
+      ]);
     } catch (err) {
       const message = err?.response?.data?.detail || err.message || 'Failed to save budget.';
       setError(message);
@@ -97,7 +136,10 @@ export default function App() {
     setError('');
     try {
       await api.post('/demo/seed');
-      await refreshAll();
+      await Promise.all([
+        refreshCore(),
+        analyticsLoaded ? refreshAnalytics() : Promise.resolve(),
+      ]);
     } catch (err) {
       const message = err?.response?.data?.detail || err.message || 'Unable to seed demo data.';
       setError(message);
@@ -108,8 +150,15 @@ export default function App() {
     setError(message);
   };
 
+  const sectionFallback = (
+    <section className="panel">
+      <h3>Loading section...</h3>
+      <p className="muted">Optimizing and preparing this module.</p>
+    </section>
+  );
+
   const renderSection = () => {
-    if (loading && activeSection !== 'settings') {
+    if (CORE_SECTION_KEYS.has(activeSection) && loadingCore) {
       return (
         <section className="panel">
           <h3>Loading...</h3>
@@ -130,38 +179,52 @@ export default function App() {
           />
         );
       case 'analytics':
+        if (!analyticsLoaded && loadingAnalytics) {
+          return (
+            <section className="panel">
+              <h3>Preparing analytics...</h3>
+              <p className="muted">Loading budgets, smart plans, and optimization modules.</p>
+            </section>
+          );
+        }
         return (
-          <div className="section-stack">
-            <section className="panel">
-              <h3>Analytics Dashboard</h3>
-              <ChartsPanel summary={summary} />
-              {summary && (
-                <div className="insights">
-                  <h4>Insights</h4>
-                  <ul>
-                    {summary.insights.map((insight) => (
-                      <li key={insight}>{insight}</li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-            </section>
-            <section className="panel">
-              <BudgetPanel budgets={budgets} smartPlan={smartPlan} onSaveBudget={saveBudget} loading={savingBudget} />
-            </section>
-          </div>
+          <Suspense fallback={sectionFallback}>
+            <div className="section-stack">
+              <section className="panel">
+                <h3>Analytics Dashboard</h3>
+                <ChartsPanel summary={summary} />
+                {summary && (
+                  <div className="insights">
+                    <h4>Insights</h4>
+                    <ul>
+                      {summary.insights.map((insight) => (
+                        <li key={insight}>{insight}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </section>
+              <section className="panel">
+                <BudgetPanel budgets={budgets} smartPlan={smartPlan} onSaveBudget={saveBudget} loading={savingBudget} />
+              </section>
+            </div>
+          </Suspense>
         );
       case 'assistant':
         return (
-          <section className="panel">
-            <AssistantHub onError={reportError} onDataMutation={refreshAll} />
-          </section>
+          <Suspense fallback={sectionFallback}>
+            <section className="panel">
+              <AssistantHub onError={reportError} onDataMutation={refreshVisibleData} />
+            </section>
+          </Suspense>
         );
       case 'automation':
         return (
-          <section className="panel">
-            <AutomationLab onError={reportError} />
-          </section>
+          <Suspense fallback={sectionFallback}>
+            <section className="panel">
+              <AutomationLab onError={reportError} />
+            </section>
+          </Suspense>
         );
       case 'transactions':
         return (
@@ -169,13 +232,19 @@ export default function App() {
             <section className="panel">
               <TransactionForm onSubmit={submitTransaction} submitting={submittingTx} />
             </section>
-            <section className="panel">
-              <TransactionTable transactions={transactions} />
-            </section>
+            <Suspense fallback={sectionFallback}>
+              <section className="panel">
+                <TransactionTable transactions={transactions} />
+              </section>
+            </Suspense>
           </div>
         );
       case 'settings':
-        return <SettingsPage onError={reportError} />;
+        return (
+          <Suspense fallback={sectionFallback}>
+            <SettingsPage onError={reportError} />
+          </Suspense>
+        );
       default:
         return null;
     }
@@ -190,7 +259,7 @@ export default function App() {
         </div>
         <div className="header-actions">
           <button className="secondary" onClick={seedDemo}>Load Demo Data</button>
-          <button className="secondary" onClick={refreshAll}>Refresh</button>
+          <button className="secondary" onClick={refreshVisibleData}>Refresh</button>
         </div>
       </header>
 

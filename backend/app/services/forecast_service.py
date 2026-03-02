@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from collections import defaultdict
 from datetime import date
+from functools import lru_cache
 
 import numpy as np
 from dateutil.relativedelta import relativedelta
@@ -72,6 +73,57 @@ def _build_lstm_model(lookback: int, keras):
     return model
 
 
+@lru_cache(maxsize=128)
+def _forecast_values(values: tuple[float, ...], months: int) -> tuple[float, ...]:
+    values_list = list(values)
+    months = max(1, min(months, 12))
+
+    if len(values_list) < 6:
+        return tuple(_moving_average_forecast(values_list, months))
+
+    keras = _get_keras()
+    if keras is None:
+        return tuple(_moving_average_forecast(values_list, months))
+
+    try:
+        np.random.seed(42)
+        keras.utils.set_random_seed(42)
+
+        lookback = 3
+        series = np.array(values_list, dtype=np.float32).reshape(-1, 1)
+        scaler = MinMaxScaler()
+        scaled = scaler.fit_transform(series)
+
+        X, y = [], []
+        for i in range(len(scaled) - lookback):
+            X.append(scaled[i : i + lookback])
+            y.append(scaled[i + lookback])
+
+        if len(X) < 2:
+            return tuple(_moving_average_forecast(values_list, months))
+
+        X_arr = np.array(X)
+        y_arr = np.array(y)
+
+        model = _build_lstm_model(lookback, keras)
+        model.fit(X_arr, y_arr, epochs=80, batch_size=4, verbose=0)
+
+        recent = scaled[-lookback:].reshape(1, lookback, 1)
+        predictions: list[float] = []
+        for _ in range(months):
+            pred_scaled = model.predict(recent, verbose=0)[0][0]
+            pred_value = scaler.inverse_transform([[pred_scaled]])[0][0]
+            pred_value = float(max(pred_value, 0.0))
+            predictions.append(round(pred_value, 2))
+
+            next_step = np.array([[[pred_scaled]]], dtype=np.float32)
+            recent = np.concatenate([recent[:, 1:, :], next_step], axis=1)
+
+        return tuple(predictions)
+    except Exception:
+        return tuple(_moving_average_forecast(values_list, months))
+
+
 def generate_spending_forecast(transactions: list[Transaction], months: int = 3) -> list[dict]:
     base_months, values = _aggregate_monthly_expenses(transactions)
     months = max(1, min(months, 12))
@@ -86,48 +138,7 @@ def generate_spending_forecast(transactions: list[Transaction], months: int = 3)
             for i in range(months)
         ]
 
-    if len(values) < 6:
-        predictions = _moving_average_forecast(values, months)
-    else:
-        keras = _get_keras()
-        if keras is None:
-            predictions = _moving_average_forecast(values, months)
-        else:
-            try:
-                np.random.seed(42)
-                keras.utils.set_random_seed(42)
-
-                lookback = 3
-                series = np.array(values, dtype=np.float32).reshape(-1, 1)
-                scaler = MinMaxScaler()
-                scaled = scaler.fit_transform(series)
-
-                X, y = [], []
-                for i in range(len(scaled) - lookback):
-                    X.append(scaled[i : i + lookback])
-                    y.append(scaled[i + lookback])
-
-                if len(X) < 2:
-                    predictions = _moving_average_forecast(values, months)
-                else:
-                    X_arr = np.array(X)
-                    y_arr = np.array(y)
-
-                    model = _build_lstm_model(lookback, keras)
-                    model.fit(X_arr, y_arr, epochs=80, batch_size=4, verbose=0)
-
-                    recent = scaled[-lookback:].reshape(1, lookback, 1)
-                    predictions = []
-                    for _ in range(months):
-                        pred_scaled = model.predict(recent, verbose=0)[0][0]
-                        pred_value = scaler.inverse_transform([[pred_scaled]])[0][0]
-                        pred_value = float(max(pred_value, 0.0))
-                        predictions.append(round(pred_value, 2))
-
-                        next_step = np.array([[[pred_scaled]]], dtype=np.float32)
-                        recent = np.concatenate([recent[:, 1:, :], next_step], axis=1)
-            except Exception:
-                predictions = _moving_average_forecast(values, months)
+    predictions = list(_forecast_values(tuple(values), months))
 
     last_month = base_months[-1]
     return [

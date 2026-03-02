@@ -3,6 +3,7 @@ from __future__ import annotations
 import csv
 from collections import defaultdict
 from datetime import date
+from functools import lru_cache
 from pathlib import Path
 
 from dateutil.relativedelta import relativedelta
@@ -19,6 +20,7 @@ def _month_start(value: date) -> date:
     return value.replace(day=1)
 
 
+@lru_cache(maxsize=1)
 def _inflation_context_note() -> str | None:
     if not CPI_DATASET_PATH.exists():
         return None
