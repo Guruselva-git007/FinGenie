@@ -52,7 +52,7 @@ class AssistantTaskRead(AssistantTaskBase):
 
 
 class UserPreferenceUpdate(BaseModel):
-    currency: str = Field(default="USD", min_length=3, max_length=8)
+    currency: str = Field(default="INR", min_length=3, max_length=8)
     monthly_savings_target: float = Field(default=500.0, ge=0)
     risk_profile: str = Field(default="balanced", min_length=3, max_length=24)
     theme: str = Field(default="minimal-light", min_length=3, max_length=32)

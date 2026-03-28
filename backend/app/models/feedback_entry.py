@@ -10,6 +10,7 @@ class FeedbackEntry(Base):
     __tablename__ = "feedback_entries"
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
+    user_id: Mapped[int | None] = mapped_column(Integer, index=True, nullable=True)
     category: Mapped[str] = mapped_column(String(40), default="general", nullable=False)
     message: Mapped[str] = mapped_column(Text, nullable=False)
     rating: Mapped[int | None] = mapped_column(Integer, nullable=True)

@@ -14,10 +14,35 @@ from app.services.forecast_service import generate_spending_forecast
 from app.services.health_score_service import compute_financial_health
 
 CPI_DATASET_PATH = Path(__file__).resolve().parent.parent / "ml" / "datasets" / "us_cpi.csv"
+LOAN_KEYWORDS = ("loan", "emi", "mortgage", "debt", "installment", "instalment", "finance")
 
 
 def _month_start(value: date) -> date:
     return value.replace(day=1)
+
+
+def _month_label(value: date) -> str:
+    return value.isoformat()
+
+
+def _contains_loan_keyword(value: str | None) -> bool:
+    lowered = (value or "").strip().lower()
+    return bool(lowered) and any(keyword in lowered for keyword in LOAN_KEYWORDS)
+
+
+def _loan_commitment_label(tx: Transaction) -> str | None:
+    if tx.kind != TransactionKind.EXPENSE:
+        return None
+
+    if not any(_contains_loan_keyword(candidate) for candidate in (tx.description, tx.merchant, tx.category)):
+        return None
+
+    for candidate in (tx.merchant, tx.description, tx.category):
+        cleaned = (candidate or "").strip()
+        if cleaned and len(cleaned) > 2:
+            return cleaned.title()
+
+    return None
 
 
 @lru_cache(maxsize=1)
@@ -142,4 +167,141 @@ def build_analytics_summary(
         "budget_utilization": budget_utilization,
         "financial_health": financial_health,
         "insights": insights,
+    }
+
+
+def build_transaction_track_record(transactions: list[Transaction]) -> dict:
+    expense_total = 0.0
+    category_totals = defaultdict(float)
+    monthly_income = defaultdict(float)
+    monthly_expense = defaultdict(float)
+    loan_commitments: dict[str, dict] = {}
+
+    for tx in transactions:
+        amount = round(float(tx.amount), 2)
+        month_key = _month_start(tx.transaction_date)
+
+        if tx.kind == TransactionKind.INCOME:
+            monthly_income[month_key] += amount
+            continue
+
+        expense_total += amount
+        monthly_expense[month_key] += amount
+        category_totals[tx.category] += amount
+
+        loan_label = _loan_commitment_label(tx)
+        if not loan_label:
+            continue
+
+        entry = loan_commitments.setdefault(
+            loan_label,
+            {
+                "label": loan_label,
+                "category": tx.category,
+                "total_paid": 0.0,
+                "payment_count": 0,
+                "latest_payment_date": None,
+                "latest_payment_amount": 0.0,
+                "months": set(),
+            },
+        )
+        entry["total_paid"] += amount
+        entry["payment_count"] += 1
+        entry["months"].add(month_key)
+        if entry["latest_payment_date"] is None or tx.transaction_date >= entry["latest_payment_date"]:
+            entry["latest_payment_date"] = tx.transaction_date
+            entry["latest_payment_amount"] = amount
+
+    categories_sorted = sorted(category_totals.items(), key=lambda item: item[1], reverse=True)
+    highest_spend_categories = [
+        {
+            "category": category,
+            "amount": round(total, 2),
+            "share_pct": round(0.0 if expense_total <= 0 else total / expense_total, 3),
+        }
+        for category, total in categories_sorted[:4]
+    ]
+    lowest_spend_categories = [
+        {
+            "category": category,
+            "amount": round(total, 2),
+            "share_pct": round(0.0 if expense_total <= 0 else total / expense_total, 3),
+        }
+        for category, total in sorted(category_totals.items(), key=lambda item: item[1])[:4]
+    ]
+
+    months = sorted(set(monthly_income) | set(monthly_expense))
+    if not months:
+        months = [_month_start(date.today())]
+
+    monthly_progress = []
+    best_savings_month = None
+    leanest_expense_month = None
+    best_savings_value = None
+    leanest_expense_value = None
+
+    for month in months[-8:]:
+        income = round(monthly_income.get(month, 0.0), 2)
+        expense = round(monthly_expense.get(month, 0.0), 2)
+        savings = round(income - expense, 2)
+        savings_rate = round(0.0 if income <= 0 else savings / income, 3)
+
+        monthly_progress.append(
+            {
+                "month": _month_label(month),
+                "income": income,
+                "expense": expense,
+                "savings": savings,
+                "savings_rate": savings_rate,
+            }
+        )
+
+        if best_savings_value is None or savings > best_savings_value:
+            best_savings_value = savings
+            best_savings_month = _month_label(month)
+
+        if leanest_expense_value is None or expense < leanest_expense_value:
+            leanest_expense_value = expense
+            leanest_expense_month = _month_label(month)
+
+    tracked_months = len(months)
+    avg_income = round(sum(monthly_income.values()) / tracked_months, 2) if tracked_months else 0.0
+    avg_expense = round(sum(monthly_expense.values()) / tracked_months, 2) if tracked_months else 0.0
+    avg_savings = round(avg_income - avg_expense, 2)
+    current_month = _month_start(date.today())
+
+    loan_commitment_items = []
+    for item in sorted(loan_commitments.values(), key=lambda row: row["total_paid"], reverse=True)[:6]:
+        month_count = max(1, len(item["months"]))
+        loan_commitment_items.append(
+            {
+                "label": item["label"],
+                "category": item["category"],
+                "total_paid": round(item["total_paid"], 2),
+                "monthly_average": round(item["total_paid"] / month_count, 2),
+                "payment_count": item["payment_count"],
+                "latest_payment_amount": round(item["latest_payment_amount"], 2),
+                "latest_payment_date": item["latest_payment_date"],
+            }
+        )
+
+    estimated_monthly_emi = round(sum(item["monthly_average"] for item in loan_commitment_items), 2)
+
+    return {
+        "snapshot": {
+            "tracked_months": tracked_months,
+            "current_month_income": round(monthly_income.get(current_month, 0.0), 2),
+            "current_month_expense": round(monthly_expense.get(current_month, 0.0), 2),
+            "current_month_savings": round(monthly_income.get(current_month, 0.0) - monthly_expense.get(current_month, 0.0), 2),
+            "average_monthly_income": avg_income,
+            "average_monthly_expense": avg_expense,
+            "average_monthly_savings": avg_savings,
+            "estimated_monthly_emi": estimated_monthly_emi,
+            "best_savings_month": best_savings_month,
+            "leanest_expense_month": leanest_expense_month,
+        },
+        "highest_spend_categories": highest_spend_categories,
+        "lowest_spend_categories": lowest_spend_categories,
+        "loan_commitments": loan_commitment_items,
+        "monthly_progress": monthly_progress,
     }

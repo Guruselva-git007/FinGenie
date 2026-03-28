@@ -1,0 +1,521 @@
+id,transaction_date,description,merchant,kind,category,amount,currency
+1,2025-01-01,Monthly salary credit,Employer Pvt Ltd,income,salary,93648.0,INR
+2,2025-01-02,Grocery purchase,BigBasket,expense,groceries,670.18,INR
+3,2025-01-02,Daily commute,IndianOil,expense,transport,501.32,INR
+4,2025-01-02,Online shopping,Flipkart,expense,shopping,1984.31,INR
+5,2025-01-03,House rent payment,House Owner,expense,rent,21204.0,INR
+6,2025-01-03,Online shopping,Amazon,expense,shopping,3878.6,INR
+7,2025-01-04,Grocery purchase,DMart,expense,groceries,2190.57,INR
+8,2025-01-04,Daily commute,Ola,expense,transport,185.4,INR
+9,2025-01-05,Learning subscription,Coursera,expense,education,1715.48,INR
+10,2025-01-06,Daily commute,IndianOil,expense,transport,470.77,INR
+11,2025-01-08,Electricity bill,TANGEDCO,expense,utilities,2718.0,INR
+12,2025-01-08,Grocery purchase,BigBasket,expense,groceries,777.91,INR
+13,2025-01-08,Grocery purchase,DMart,expense,groceries,1864.74,INR
+14,2025-01-08,Daily commute,Ola,expense,transport,937.73,INR
+15,2025-01-09,Daily commute,Uber,expense,transport,298.71,INR
+16,2025-01-10,Daily commute,IndianOil,expense,transport,633.37,INR
+17,2025-01-12,Daily commute,IndianOil,expense,transport,339.55,INR
+18,2025-01-12,Food order,Swiggy,expense,dining,863.58,INR
+19,2025-01-13,Daily commute,Uber,expense,transport,417.95,INR
+20,2025-01-13,Food order,Zomato,expense,dining,642.48,INR
+21,2025-01-13,Entertainment subscription,Prime Video,expense,entertainment,1189.51,INR
+22,2025-01-14,Travel booking,MakeMyTrip,expense,travel,5235.44,INR
+23,2025-01-15,Grocery purchase,DMart,expense,groceries,1103.75,INR
+24,2025-01-18,Internet + mobile recharge,Airtel,expense,utilities,1463.0,INR
+25,2025-01-18,Grocery purchase,BigBasket,expense,groceries,1837.66,INR
+26,2025-01-18,Grocery purchase,BigBasket,expense,groceries,2132.65,INR
+27,2025-01-18,Travel booking,IndiGo,expense,travel,7877.3,INR
+28,2025-01-19,Online shopping,Myntra,expense,shopping,1664.31,INR
+29,2025-01-20,Food order,Cafe Coffee Day,expense,dining,354.56,INR
+30,2025-01-21,Entertainment subscription,BookMyShow,expense,entertainment,756.51,INR
+31,2025-01-21,Online shopping,Flipkart,expense,shopping,1963.84,INR
+32,2025-01-21,Learning subscription,Udemy,expense,education,571.46,INR
+33,2025-01-22,Medical expense,Practo,expense,healthcare,2246.42,INR
+34,2025-01-23,Grocery purchase,DMart,expense,groceries,1435.87,INR
+35,2025-01-23,Daily commute,Uber,expense,transport,158.03,INR
+36,2025-01-23,Food order,Cafe Coffee Day,expense,dining,841.0,INR
+37,2025-01-24,Entertainment subscription,Netflix,expense,entertainment,362.57,INR
+38,2025-01-25,Daily commute,Ola,expense,transport,204.83,INR
+39,2025-01-25,Medical expense,Apollo Pharmacy,expense,healthcare,865.36,INR
+40,2025-01-27,Food order,Zomato,expense,dining,345.91,INR
+41,2025-01-28,Daily commute,Uber,expense,transport,749.81,INR
+42,2025-01-28,Daily commute,Ola,expense,transport,599.2,INR
+43,2025-01-28,Food order,Swiggy,expense,dining,1063.81,INR
+44,2025-02-01,Monthly salary credit,Employer Pvt Ltd,income,salary,97186.0,INR
+45,2025-02-01,Medical expense,Apollo Pharmacy,expense,healthcare,1673.99,INR
+46,2025-02-01,Online shopping,Amazon,expense,shopping,3119.01,INR
+47,2025-02-02,Online shopping,Amazon,expense,shopping,749.38,INR
+48,2025-02-02,Online shopping,Flipkart,expense,shopping,762.17,INR
+49,2025-02-03,House rent payment,House Owner,expense,rent,22133.0,INR
+50,2025-02-03,Grocery purchase,BigBasket,expense,groceries,2473.59,INR
+51,2025-02-03,Food order,Cafe Coffee Day,expense,dining,675.71,INR
+52,2025-02-03,Food order,Cafe Coffee Day,expense,dining,961.15,INR
+53,2025-02-04,Grocery purchase,DMart,expense,groceries,2529.25,INR
+54,2025-02-04,Daily commute,IndianOil,expense,transport,367.71,INR
+55,2025-02-04,Daily commute,Ola,expense,transport,849.34,INR
+56,2025-02-05,Grocery purchase,DMart,expense,groceries,825.96,INR
+57,2025-02-05,Daily commute,Ola,expense,transport,752.88,INR
+58,2025-02-05,Food order,Cafe Coffee Day,expense,dining,664.79,INR
+59,2025-02-06,Daily commute,Ola,expense,transport,122.69,INR
+60,2025-02-07,Food order,Cafe Coffee Day,expense,dining,950.37,INR
+61,2025-02-07,Learning subscription,Coursera,expense,education,1674.37,INR
+62,2025-02-08,Electricity bill,TANGEDCO,expense,utilities,2243.0,INR
+63,2025-02-08,Daily commute,IndianOil,expense,transport,905.97,INR
+64,2025-02-08,Medical expense,Apollo Pharmacy,expense,healthcare,494.06,INR
+65,2025-02-08,Online shopping,Flipkart,expense,shopping,2975.22,INR
+66,2025-02-11,Daily commute,Uber,expense,transport,363.61,INR
+67,2025-02-13,Grocery purchase,Reliance Fresh,expense,groceries,1850.34,INR
+68,2025-02-13,Entertainment subscription,BookMyShow,expense,entertainment,849.53,INR
+69,2025-02-15,Grocery purchase,DMart,expense,groceries,1040.82,INR
+70,2025-02-15,Entertainment subscription,BookMyShow,expense,entertainment,650.94,INR
+71,2025-02-17,Daily commute,Uber,expense,transport,541.38,INR
+72,2025-02-18,Internet + mobile recharge,Airtel,expense,utilities,1910.0,INR
+73,2025-02-18,Grocery purchase,BigBasket,expense,groceries,2048.67,INR
+74,2025-02-18,Daily commute,IndianOil,expense,transport,882.35,INR
+75,2025-02-18,Food order,Swiggy,expense,dining,450.36,INR
+76,2025-02-19,Learning subscription,Udemy,expense,education,761.69,INR
+77,2025-02-20,Daily commute,Ola,expense,transport,525.54,INR
+78,2025-02-21,Daily commute,IndianOil,expense,transport,625.45,INR
+79,2025-02-22,Grocery purchase,Reliance Fresh,expense,groceries,1851.56,INR
+80,2025-02-23,Entertainment subscription,Netflix,expense,entertainment,912.66,INR
+81,2025-02-24,Daily commute,IndianOil,expense,transport,338.61,INR
+82,2025-02-25,Grocery purchase,Reliance Fresh,expense,groceries,2256.21,INR
+83,2025-02-27,Daily commute,Ola,expense,transport,318.75,INR
+84,2025-02-28,Food order,Cafe Coffee Day,expense,dining,611.6,INR
+85,2025-03-01,Monthly salary credit,Employer Pvt Ltd,income,salary,105498.0,INR
+86,2025-03-01,Daily commute,Ola,expense,transport,340.12,INR
+87,2025-03-02,Daily commute,IndianOil,expense,transport,730.66,INR
+88,2025-03-02,Food order,Cafe Coffee Day,expense,dining,499.88,INR
+89,2025-03-02,Food order,Cafe Coffee Day,expense,dining,666.32,INR
+90,2025-03-02,Entertainment subscription,BookMyShow,expense,entertainment,281.07,INR
+91,2025-03-03,House rent payment,House Owner,expense,rent,24334.0,INR
+92,2025-03-03,Daily commute,Uber,expense,transport,258.04,INR
+93,2025-03-03,Food order,Cafe Coffee Day,expense,dining,249.32,INR
+94,2025-03-03,Learning subscription,Coursera,expense,education,1261.18,INR
+95,2025-03-04,Grocery purchase,DMart,expense,groceries,1462.97,INR
+96,2025-03-04,Grocery purchase,BigBasket,expense,groceries,900.24,INR
+97,2025-03-05,Daily commute,Uber,expense,transport,366.27,INR
+98,2025-03-05,Learning subscription,Udemy,expense,education,1973.64,INR
+99,2025-03-06,Grocery purchase,Reliance Fresh,expense,groceries,1537.18,INR
+100,2025-03-08,Electricity bill,TANGEDCO,expense,utilities,1589.0,INR
+101,2025-03-10,Online shopping,Flipkart,expense,shopping,1669.86,INR
+102,2025-03-11,Medical expense,Practo,expense,healthcare,809.58,INR
+103,2025-03-13,Daily commute,Uber,expense,transport,256.65,INR
+104,2025-03-13,Online shopping,Amazon,expense,shopping,2985.25,INR
+105,2025-03-14,Grocery purchase,Reliance Fresh,expense,groceries,1547.51,INR
+106,2025-03-16,Daily commute,Ola,expense,transport,297.41,INR
+107,2025-03-17,Food order,Swiggy,expense,dining,1048.37,INR
+108,2025-03-18,Internet + mobile recharge,Airtel,expense,utilities,1093.0,INR
+109,2025-03-18,Grocery purchase,Reliance Fresh,expense,groceries,779.43,INR
+110,2025-03-18,Daily commute,IndianOil,expense,transport,716.28,INR
+111,2025-03-19,Entertainment subscription,Netflix,expense,entertainment,778.5,INR
+112,2025-03-20,Online shopping,Myntra,expense,shopping,4185.56,INR
+113,2025-03-21,Grocery purchase,BigBasket,expense,groceries,592.44,INR
+114,2025-03-21,Daily commute,IndianOil,expense,transport,813.9,INR
+115,2025-03-22,Entertainment subscription,BookMyShow,expense,entertainment,764.79,INR
+116,2025-03-23,Daily commute,IndianOil,expense,transport,946.2,INR
+117,2025-03-23,Medical expense,Practo,expense,healthcare,887.04,INR
+118,2025-03-24,Grocery purchase,BigBasket,expense,groceries,2032.41,INR
+119,2025-03-24,Grocery purchase,Reliance Fresh,expense,groceries,2331.39,INR
+120,2025-03-25,Online shopping,Amazon,expense,shopping,534.47,INR
+121,2025-03-26,Daily commute,Ola,expense,transport,356.76,INR
+122,2025-03-28,Daily commute,Uber,expense,transport,487.8,INR
+123,2025-03-28,Daily commute,IndianOil,expense,transport,201.26,INR
+124,2025-03-28,Food order,Cafe Coffee Day,expense,dining,340.58,INR
+125,2025-03-28,Food order,Swiggy,expense,dining,591.85,INR
+126,2025-04-01,Monthly salary credit,Employer Pvt Ltd,income,salary,98004.0,INR
+127,2025-04-01,Daily commute,Uber,expense,transport,182.45,INR
+128,2025-04-01,Entertainment subscription,Netflix,expense,entertainment,936.3,INR
+129,2025-04-03,House rent payment,House Owner,expense,rent,24027.0,INR
+130,2025-04-04,Grocery purchase,DMart,expense,groceries,1750.08,INR
+131,2025-04-04,Food order,Zomato,expense,dining,975.72,INR
+132,2025-04-04,Medical expense,Practo,expense,healthcare,2312.38,INR
+133,2025-04-05,Grocery purchase,Reliance Fresh,expense,groceries,721.26,INR
+134,2025-04-05,Daily commute,Ola,expense,transport,225.78,INR
+135,2025-04-07,Food order,Cafe Coffee Day,expense,dining,434.52,INR
+136,2025-04-08,Electricity bill,TANGEDCO,expense,utilities,1783.0,INR
+137,2025-04-08,Food order,Swiggy,expense,dining,1175.73,INR
+138,2025-04-09,Grocery purchase,Reliance Fresh,expense,groceries,1871.35,INR
+139,2025-04-09,Daily commute,Uber,expense,transport,196.61,INR
+140,2025-04-09,Daily commute,Uber,expense,transport,735.22,INR
+141,2025-04-09,Medical expense,Apollo Pharmacy,expense,healthcare,2121.59,INR
+142,2025-04-09,Learning subscription,Coursera,expense,education,2137.09,INR
+143,2025-04-09,Learning subscription,Udemy,expense,education,1518.82,INR
+144,2025-04-10,Daily commute,Ola,expense,transport,866.15,INR
+145,2025-04-11,Daily commute,Uber,expense,transport,648.8,INR
+146,2025-04-11,Entertainment subscription,Prime Video,expense,entertainment,1002.04,INR
+147,2025-04-13,Travel booking,MakeMyTrip,expense,travel,9656.74,INR
+148,2025-04-14,Daily commute,Ola,expense,transport,156.59,INR
+149,2025-04-15,Grocery purchase,DMart,expense,groceries,2103.32,INR
+150,2025-04-18,Internet + mobile recharge,Airtel,expense,utilities,1223.0,INR
+151,2025-04-18,Daily commute,IndianOil,expense,transport,474.98,INR
+152,2025-04-18,Travel booking,IndiGo,expense,travel,9338.2,INR
+153,2025-04-20,Grocery purchase,DMart,expense,groceries,1693.01,INR
+154,2025-04-21,Daily commute,Ola,expense,transport,539.49,INR
+155,2025-04-22,Grocery purchase,DMart,expense,groceries,1153.54,INR
+156,2025-04-22,Grocery purchase,BigBasket,expense,groceries,2656.49,INR
+157,2025-04-22,Online shopping,Amazon,expense,shopping,1974.32,INR
+158,2025-04-23,Grocery purchase,Reliance Fresh,expense,groceries,928.45,INR
+159,2025-04-23,Daily commute,Uber,expense,transport,572.84,INR
+160,2025-04-24,Food order,Swiggy,expense,dining,1124.28,INR
+161,2025-04-26,Daily commute,Uber,expense,transport,866.11,INR
+162,2025-04-26,Food order,Swiggy,expense,dining,1079.04,INR
+163,2025-04-27,Daily commute,Ola,expense,transport,603.48,INR
+164,2025-04-27,Online shopping,Flipkart,expense,shopping,1793.74,INR
+165,2025-04-27,Online shopping,Amazon,expense,shopping,1324.82,INR
+166,2025-04-28,Food order,Zomato,expense,dining,1173.31,INR
+167,2025-04-28,Entertainment subscription,BookMyShow,expense,entertainment,1010.56,INR
+168,2025-04-28,Online shopping,Flipkart,expense,shopping,1323.0,INR
+169,2025-05-01,Monthly salary credit,Employer Pvt Ltd,income,salary,93779.0,INR
+170,2025-05-02,Entertainment subscription,Netflix,expense,entertainment,1183.92,INR
+171,2025-05-03,House rent payment,House Owner,expense,rent,23139.0,INR
+172,2025-05-03,Food order,Zomato,expense,dining,705.76,INR
+173,2025-05-04,Learning subscription,Udemy,expense,education,553.34,INR
+174,2025-05-05,Online shopping,Myntra,expense,shopping,3044.2,INR
+175,2025-05-07,Daily commute,Ola,expense,transport,772.18,INR
+176,2025-05-08,Electricity bill,TANGEDCO,expense,utilities,1565.0,INR
+177,2025-05-08,Entertainment subscription,Netflix,expense,entertainment,346.5,INR
+178,2025-05-08,Online shopping,Amazon,expense,shopping,3475.21,INR
+179,2025-05-09,Grocery purchase,BigBasket,expense,groceries,704.75,INR
+180,2025-05-10,Daily commute,IndianOil,expense,transport,376.71,INR
+181,2025-05-10,Daily commute,IndianOil,expense,transport,225.65,INR
+182,2025-05-11,Grocery purchase,Reliance Fresh,expense,groceries,1874.59,INR
+183,2025-05-12,Daily commute,Ola,expense,transport,178.08,INR
+184,2025-05-13,Medical expense,Practo,expense,healthcare,1249.22,INR
+185,2025-05-14,Grocery purchase,Reliance Fresh,expense,groceries,2162.08,INR
+186,2025-05-14,Daily commute,Ola,expense,transport,453.99,INR
+187,2025-05-14,Daily commute,IndianOil,expense,transport,900.5,INR
+188,2025-05-15,Food order,Zomato,expense,dining,869.14,INR
+189,2025-05-17,Grocery purchase,BigBasket,expense,groceries,1355.21,INR
+190,2025-05-17,Food order,Zomato,expense,dining,989.61,INR
+191,2025-05-18,Internet + mobile recharge,Airtel,expense,utilities,2089.0,INR
+192,2025-05-18,Daily commute,Uber,expense,transport,372.22,INR
+193,2025-05-18,Learning subscription,Coursera,expense,education,2043.19,INR
+194,2025-05-19,Grocery purchase,BigBasket,expense,groceries,1048.6,INR
+195,2025-05-20,Daily commute,IndianOil,expense,transport,369.79,INR
+196,2025-05-20,Daily commute,IndianOil,expense,transport,387.47,INR
+197,2025-05-20,Entertainment subscription,Netflix,expense,entertainment,654.87,INR
+198,2025-05-21,Food order,Cafe Coffee Day,expense,dining,521.89,INR
+199,2025-05-21,Medical expense,Apollo Pharmacy,expense,healthcare,1966.28,INR
+200,2025-05-22,Daily commute,Ola,expense,transport,637.22,INR
+201,2025-05-22,Daily commute,Uber,expense,transport,717.4,INR
+202,2025-05-22,Daily commute,IndianOil,expense,transport,869.33,INR
+203,2025-05-23,Grocery purchase,Reliance Fresh,expense,groceries,453.97,INR
+204,2025-05-23,Online shopping,Myntra,expense,shopping,2218.83,INR
+205,2025-05-24,Grocery purchase,DMart,expense,groceries,2025.98,INR
+206,2025-05-25,Online shopping,Amazon,expense,shopping,3380.16,INR
+207,2025-05-26,Grocery purchase,DMart,expense,groceries,2064.11,INR
+208,2025-05-26,Food order,Cafe Coffee Day,expense,dining,353.09,INR
+209,2025-05-27,Food order,Swiggy,expense,dining,866.25,INR
+210,2025-06-01,Monthly salary credit,Employer Pvt Ltd,income,salary,105225.0,INR
+211,2025-06-01,Daily commute,IndianOil,expense,transport,435.72,INR
+212,2025-06-01,Daily commute,Ola,expense,transport,367.85,INR
+213,2025-06-02,Daily commute,Uber,expense,transport,811.3,INR
+214,2025-06-03,House rent payment,House Owner,expense,rent,25351.0,INR
+215,2025-06-03,Daily commute,Uber,expense,transport,245.19,INR
+216,2025-06-03,Entertainment subscription,BookMyShow,expense,entertainment,628.04,INR
+217,2025-06-03,Online shopping,Flipkart,expense,shopping,571.72,INR
+218,2025-06-07,Daily commute,Uber,expense,transport,464.34,INR
+219,2025-06-08,Electricity bill,TANGEDCO,expense,utilities,2344.0,INR
+220,2025-06-08,Grocery purchase,Reliance Fresh,expense,groceries,1483.7,INR
+221,2025-06-08,Daily commute,Ola,expense,transport,302.12,INR
+222,2025-06-08,Learning subscription,Coursera,expense,education,1894.53,INR
+223,2025-06-09,Grocery purchase,DMart,expense,groceries,1588.8,INR
+224,2025-06-09,Entertainment subscription,Prime Video,expense,entertainment,526.68,INR
+225,2025-06-11,Grocery purchase,Reliance Fresh,expense,groceries,1889.73,INR
+226,2025-06-11,Daily commute,Ola,expense,transport,861.21,INR
+227,2025-06-11,Daily commute,IndianOil,expense,transport,506.72,INR
+228,2025-06-11,Food order,Cafe Coffee Day,expense,dining,872.72,INR
+229,2025-06-12,Online shopping,Amazon,expense,shopping,2905.53,INR
+230,2025-06-13,Daily commute,IndianOil,expense,transport,246.83,INR
+231,2025-06-13,Daily commute,IndianOil,expense,transport,905.23,INR
+232,2025-06-13,Daily commute,Ola,expense,transport,566.72,INR
+233,2025-06-13,Food order,Cafe Coffee Day,expense,dining,348.35,INR
+234,2025-06-13,Medical expense,Practo,expense,healthcare,2042.02,INR
+235,2025-06-14,Food order,Zomato,expense,dining,209.61,INR
+236,2025-06-15,Food order,Swiggy,expense,dining,1180.34,INR
+237,2025-06-15,Medical expense,Practo,expense,healthcare,1109.38,INR
+238,2025-06-18,Internet + mobile recharge,Airtel,expense,utilities,2119.0,INR
+239,2025-06-18,Grocery purchase,Reliance Fresh,expense,groceries,2558.44,INR
+240,2025-06-18,Food order,Swiggy,expense,dining,1105.07,INR
+241,2025-06-18,Online shopping,Amazon,expense,shopping,4199.66,INR
+242,2025-06-19,Food order,Cafe Coffee Day,expense,dining,856.26,INR
+243,2025-06-23,Grocery purchase,Reliance Fresh,expense,groceries,1001.06,INR
+244,2025-06-24,Grocery purchase,DMart,expense,groceries,1452.84,INR
+245,2025-06-24,Grocery purchase,Reliance Fresh,expense,groceries,1507.66,INR
+246,2025-06-24,Daily commute,IndianOil,expense,transport,783.89,INR
+247,2025-06-25,Grocery purchase,BigBasket,expense,groceries,2423.68,INR
+248,2025-06-25,Learning subscription,Coursera,expense,education,1733.04,INR
+249,2025-06-27,Online shopping,Flipkart,expense,shopping,1433.4,INR
+250,2025-06-28,Entertainment subscription,Prime Video,expense,entertainment,380.91,INR
+251,2025-07-01,Monthly salary credit,Employer Pvt Ltd,income,salary,94993.0,INR
+252,2025-07-03,House rent payment,House Owner,expense,rent,22954.0,INR
+253,2025-07-03,Food order,Zomato,expense,dining,1079.26,INR
+254,2025-07-04,Grocery purchase,DMart,expense,groceries,510.34,INR
+255,2025-07-04,Daily commute,Ola,expense,transport,917.45,INR
+256,2025-07-07,Grocery purchase,Reliance Fresh,expense,groceries,2093.74,INR
+257,2025-07-07,Daily commute,Uber,expense,transport,611.44,INR
+258,2025-07-07,Entertainment subscription,Prime Video,expense,entertainment,997.63,INR
+259,2025-07-08,Electricity bill,TANGEDCO,expense,utilities,1458.0,INR
+260,2025-07-08,Food order,Zomato,expense,dining,761.25,INR
+261,2025-07-08,Learning subscription,Udemy,expense,education,1614.4,INR
+262,2025-07-10,Grocery purchase,DMart,expense,groceries,2041.77,INR
+263,2025-07-10,Learning subscription,Udemy,expense,education,1199.19,INR
+264,2025-07-11,Food order,Swiggy,expense,dining,1027.35,INR
+265,2025-07-11,Entertainment subscription,Prime Video,expense,entertainment,1080.2,INR
+266,2025-07-13,Grocery purchase,Reliance Fresh,expense,groceries,2662.46,INR
+267,2025-07-14,Daily commute,IndianOil,expense,transport,427.57,INR
+268,2025-07-14,Daily commute,Uber,expense,transport,729.05,INR
+269,2025-07-16,Entertainment subscription,Prime Video,expense,entertainment,381.02,INR
+270,2025-07-17,Daily commute,IndianOil,expense,transport,403.22,INR
+271,2025-07-17,Medical expense,Apollo Pharmacy,expense,healthcare,542.63,INR
+272,2025-07-17,Travel booking,IndiGo,expense,travel,5433.83,INR
+273,2025-07-18,Internet + mobile recharge,Airtel,expense,utilities,1869.0,INR
+274,2025-07-18,Food order,Zomato,expense,dining,654.17,INR
+275,2025-07-19,Daily commute,Uber,expense,transport,408.18,INR
+276,2025-07-20,Grocery purchase,DMart,expense,groceries,2138.14,INR
+277,2025-07-20,Daily commute,Uber,expense,transport,780.87,INR
+278,2025-07-21,Daily commute,Ola,expense,transport,707.07,INR
+279,2025-07-21,Daily commute,Ola,expense,transport,631.21,INR
+280,2025-07-21,Online shopping,Myntra,expense,shopping,2316.04,INR
+281,2025-07-22,Grocery purchase,BigBasket,expense,groceries,1775.33,INR
+282,2025-07-22,Food order,Zomato,expense,dining,523.12,INR
+283,2025-07-23,Daily commute,Ola,expense,transport,825.74,INR
+284,2025-07-23,Medical expense,Practo,expense,healthcare,1600.53,INR
+285,2025-07-24,Online shopping,Flipkart,expense,shopping,2307.74,INR
+286,2025-07-24,Travel booking,MakeMyTrip,expense,travel,4714.01,INR
+287,2025-07-25,Grocery purchase,Reliance Fresh,expense,groceries,844.3,INR
+288,2025-07-25,Grocery purchase,BigBasket,expense,groceries,2717.09,INR
+289,2025-07-25,Online shopping,Amazon,expense,shopping,3055.25,INR
+290,2025-07-26,Online shopping,Amazon,expense,shopping,844.3,INR
+291,2025-07-27,Daily commute,IndianOil,expense,transport,321.56,INR
+292,2025-07-27,Food order,Cafe Coffee Day,expense,dining,784.32,INR
+293,2025-07-28,Daily commute,Ola,expense,transport,802.53,INR
+294,2025-08-01,Monthly salary credit,Employer Pvt Ltd,income,salary,104868.0,INR
+295,2025-08-01,Daily commute,IndianOil,expense,transport,356.0,INR
+296,2025-08-02,Daily commute,Uber,expense,transport,579.29,INR
+297,2025-08-02,Daily commute,Ola,expense,transport,901.08,INR
+298,2025-08-02,Food order,Cafe Coffee Day,expense,dining,1159.31,INR
+299,2025-08-03,House rent payment,House Owner,expense,rent,23219.0,INR
+300,2025-08-03,Daily commute,Uber,expense,transport,218.31,INR
+301,2025-08-04,Grocery purchase,BigBasket,expense,groceries,1146.18,INR
+302,2025-08-04,Entertainment subscription,Netflix,expense,entertainment,825.14,INR
+303,2025-08-05,Daily commute,IndianOil,expense,transport,907.77,INR
+304,2025-08-06,Medical expense,Apollo Pharmacy,expense,healthcare,1269.16,INR
+305,2025-08-07,Grocery purchase,DMart,expense,groceries,1587.87,INR
+306,2025-08-07,Learning subscription,Udemy,expense,education,518.07,INR
+307,2025-08-08,Electricity bill,TANGEDCO,expense,utilities,1827.0,INR
+308,2025-08-08,Grocery purchase,BigBasket,expense,groceries,2145.02,INR
+309,2025-08-08,Entertainment subscription,Netflix,expense,entertainment,751.54,INR
+310,2025-08-08,Online shopping,Flipkart,expense,shopping,3115.74,INR
+311,2025-08-08,Online shopping,Flipkart,expense,shopping,3414.96,INR
+312,2025-08-08,Learning subscription,Coursera,expense,education,2025.98,INR
+313,2025-08-09,Entertainment subscription,BookMyShow,expense,entertainment,280.27,INR
+314,2025-08-11,Grocery purchase,BigBasket,expense,groceries,2195.77,INR
+315,2025-08-12,Grocery purchase,BigBasket,expense,groceries,1160.33,INR
+316,2025-08-13,Daily commute,Ola,expense,transport,181.49,INR
+317,2025-08-14,Food order,Zomato,expense,dining,760.0,INR
+318,2025-08-15,Food order,Zomato,expense,dining,1057.37,INR
+319,2025-08-16,Daily commute,Ola,expense,transport,402.79,INR
+320,2025-08-16,Daily commute,Uber,expense,transport,802.36,INR
+321,2025-08-17,Grocery purchase,DMart,expense,groceries,1115.05,INR
+322,2025-08-17,Food order,Zomato,expense,dining,639.52,INR
+323,2025-08-18,Internet + mobile recharge,Airtel,expense,utilities,1414.0,INR
+324,2025-08-21,Daily commute,IndianOil,expense,transport,164.5,INR
+325,2025-08-21,Online shopping,Myntra,expense,shopping,2946.38,INR
+326,2025-08-23,Daily commute,IndianOil,expense,transport,225.06,INR
+327,2025-08-23,Daily commute,Uber,expense,transport,649.43,INR
+328,2025-08-23,Medical expense,Practo,expense,healthcare,1005.33,INR
+329,2025-08-23,Online shopping,Flipkart,expense,shopping,763.37,INR
+330,2025-08-24,Grocery purchase,DMart,expense,groceries,2745.03,INR
+331,2025-08-25,Grocery purchase,DMart,expense,groceries,885.1,INR
+332,2025-08-25,Daily commute,Ola,expense,transport,205.15,INR
+333,2025-08-25,Food order,Zomato,expense,dining,798.44,INR
+334,2025-08-26,Food order,Cafe Coffee Day,expense,dining,410.2,INR
+335,2025-09-01,Monthly salary credit,Employer Pvt Ltd,income,salary,94660.0,INR
+336,2025-09-01,Daily commute,IndianOil,expense,transport,801.78,INR
+337,2025-09-01,Entertainment subscription,BookMyShow,expense,entertainment,808.48,INR
+338,2025-09-01,Medical expense,Practo,expense,healthcare,559.72,INR
+339,2025-09-03,House rent payment,House Owner,expense,rent,21584.0,INR
+340,2025-09-03,Daily commute,Ola,expense,transport,329.49,INR
+341,2025-09-04,Daily commute,Uber,expense,transport,393.74,INR
+342,2025-09-04,Food order,Zomato,expense,dining,1062.21,INR
+343,2025-09-04,Online shopping,Myntra,expense,shopping,3578.93,INR
+344,2025-09-06,Daily commute,Ola,expense,transport,550.74,INR
+345,2025-09-07,Food order,Cafe Coffee Day,expense,dining,549.01,INR
+346,2025-09-08,Electricity bill,TANGEDCO,expense,utilities,1322.0,INR
+347,2025-09-08,Medical expense,Apollo Pharmacy,expense,healthcare,1049.19,INR
+348,2025-09-09,Grocery purchase,DMart,expense,groceries,1718.96,INR
+349,2025-09-09,Grocery purchase,BigBasket,expense,groceries,664.62,INR
+350,2025-09-10,Grocery purchase,DMart,expense,groceries,1395.9,INR
+351,2025-09-13,Daily commute,IndianOil,expense,transport,150.46,INR
+352,2025-09-14,Grocery purchase,DMart,expense,groceries,1207.46,INR
+353,2025-09-14,Daily commute,Ola,expense,transport,386.48,INR
+354,2025-09-15,Grocery purchase,BigBasket,expense,groceries,1551.44,INR
+355,2025-09-15,Grocery purchase,BigBasket,expense,groceries,1855.39,INR
+356,2025-09-15,Daily commute,Ola,expense,transport,270.64,INR
+357,2025-09-15,Entertainment subscription,BookMyShow,expense,entertainment,684.2,INR
+358,2025-09-16,Daily commute,Uber,expense,transport,510.11,INR
+359,2025-09-16,Online shopping,Myntra,expense,shopping,1579.89,INR
+360,2025-09-16,Learning subscription,Udemy,expense,education,763.09,INR
+361,2025-09-18,Internet + mobile recharge,Airtel,expense,utilities,1239.0,INR
+362,2025-09-18,Food order,Zomato,expense,dining,601.51,INR
+363,2025-09-18,Entertainment subscription,Netflix,expense,entertainment,1127.6,INR
+364,2025-09-18,Learning subscription,Coursera,expense,education,1028.81,INR
+365,2025-09-19,Daily commute,Uber,expense,transport,753.38,INR
+366,2025-09-19,Daily commute,Ola,expense,transport,646.87,INR
+367,2025-09-22,Daily commute,IndianOil,expense,transport,607.31,INR
+368,2025-09-23,Daily commute,Ola,expense,transport,359.22,INR
+369,2025-09-23,Online shopping,Flipkart,expense,shopping,2037.31,INR
+370,2025-09-25,Food order,Zomato,expense,dining,817.92,INR
+371,2025-09-25,Food order,Swiggy,expense,dining,387.63,INR
+372,2025-09-26,Grocery purchase,Reliance Fresh,expense,groceries,1848.35,INR
+373,2025-09-27,Grocery purchase,DMart,expense,groceries,2614.8,INR
+374,2025-09-27,Food order,Swiggy,expense,dining,850.81,INR
+375,2025-09-27,Online shopping,Amazon,expense,shopping,2207.36,INR
+376,2025-10-01,Monthly salary credit,Employer Pvt Ltd,income,salary,106654.0,INR
+377,2025-10-01,Grocery purchase,Reliance Fresh,expense,groceries,2156.22,INR
+378,2025-10-02,Food order,Cafe Coffee Day,expense,dining,249.79,INR
+379,2025-10-03,House rent payment,House Owner,expense,rent,22118.0,INR
+380,2025-10-03,Daily commute,Ola,expense,transport,768.67,INR
+381,2025-10-03,Learning subscription,Udemy,expense,education,1477.45,INR
+382,2025-10-04,Entertainment subscription,BookMyShow,expense,entertainment,903.59,INR
+383,2025-10-04,Medical expense,Practo,expense,healthcare,724.32,INR
+384,2025-10-05,Travel booking,IRCTC,expense,travel,5704.74,INR
+385,2025-10-08,Electricity bill,TANGEDCO,expense,utilities,1342.0,INR
+386,2025-10-08,Daily commute,IndianOil,expense,transport,437.87,INR
+387,2025-10-08,Entertainment subscription,BookMyShow,expense,entertainment,289.47,INR
+388,2025-10-08,Learning subscription,Udemy,expense,education,2034.38,INR
+389,2025-10-09,Food order,Zomato,expense,dining,815.72,INR
+390,2025-10-09,Travel booking,IndiGo,expense,travel,4140.48,INR
+391,2025-10-10,Medical expense,Apollo Pharmacy,expense,healthcare,453.48,INR
+392,2025-10-11,Grocery purchase,DMart,expense,groceries,2242.75,INR
+393,2025-10-11,Food order,Cafe Coffee Day,expense,dining,1056.53,INR
+394,2025-10-12,Online shopping,Flipkart,expense,shopping,1038.61,INR
+395,2025-10-13,Grocery purchase,Reliance Fresh,expense,groceries,2642.2,INR
+396,2025-10-13,Food order,Cafe Coffee Day,expense,dining,261.92,INR
+397,2025-10-13,Food order,Zomato,expense,dining,819.34,INR
+398,2025-10-14,Daily commute,IndianOil,expense,transport,925.06,INR
+399,2025-10-15,Grocery purchase,DMart,expense,groceries,1588.2,INR
+400,2025-10-15,Daily commute,Uber,expense,transport,719.63,INR
+401,2025-10-16,Daily commute,Uber,expense,transport,224.78,INR
+402,2025-10-17,Online shopping,Flipkart,expense,shopping,2593.93,INR
+403,2025-10-18,Internet + mobile recharge,Airtel,expense,utilities,1465.0,INR
+404,2025-10-19,Daily commute,Ola,expense,transport,841.85,INR
+405,2025-10-21,Entertainment subscription,BookMyShow,expense,entertainment,1120.85,INR
+406,2025-10-22,Grocery purchase,Reliance Fresh,expense,groceries,2483.36,INR
+407,2025-10-22,Daily commute,IndianOil,expense,transport,934.08,INR
+408,2025-10-24,Daily commute,Ola,expense,transport,705.34,INR
+409,2025-10-25,Grocery purchase,Reliance Fresh,expense,groceries,1248.71,INR
+410,2025-10-25,Food order,Zomato,expense,dining,1069.83,INR
+411,2025-10-26,Grocery purchase,DMart,expense,groceries,1077.86,INR
+412,2025-10-26,Daily commute,Ola,expense,transport,440.45,INR
+413,2025-10-26,Online shopping,Amazon,expense,shopping,1585.46,INR
+414,2025-10-26,Online shopping,Amazon,expense,shopping,1128.94,INR
+415,2025-10-27,Grocery purchase,DMart,expense,groceries,1812.82,INR
+416,2025-10-28,Daily commute,Uber,expense,transport,934.04,INR
+417,2025-10-28,Daily commute,Ola,expense,transport,156.23,INR
+418,2025-10-28,Daily commute,Ola,expense,transport,202.76,INR
+419,2025-11-01,Monthly salary credit,Employer Pvt Ltd,income,salary,90307.0,INR
+420,2025-11-01,Daily commute,IndianOil,expense,transport,838.01,INR
+421,2025-11-03,House rent payment,House Owner,expense,rent,24811.0,INR
+422,2025-11-03,Entertainment subscription,Netflix,expense,entertainment,953.91,INR
+423,2025-11-05,Daily commute,IndianOil,expense,transport,200.65,INR
+424,2025-11-06,Grocery purchase,BigBasket,expense,groceries,1488.06,INR
+425,2025-11-06,Food order,Swiggy,expense,dining,314.8,INR
+426,2025-11-08,Electricity bill,TANGEDCO,expense,utilities,1789.0,INR
+427,2025-11-08,Entertainment subscription,BookMyShow,expense,entertainment,923.94,INR
+428,2025-11-08,Learning subscription,Coursera,expense,education,1507.27,INR
+429,2025-11-09,Food order,Swiggy,expense,dining,442.11,INR
+430,2025-11-10,Grocery purchase,DMart,expense,groceries,1143.79,INR
+431,2025-11-10,Daily commute,Uber,expense,transport,623.86,INR
+432,2025-11-10,Daily commute,Ola,expense,transport,740.41,INR
+433,2025-11-10,Food order,Cafe Coffee Day,expense,dining,1067.8,INR
+434,2025-11-12,Grocery purchase,DMart,expense,groceries,1153.01,INR
+435,2025-11-12,Daily commute,Uber,expense,transport,648.39,INR
+436,2025-11-12,Daily commute,IndianOil,expense,transport,229.07,INR
+437,2025-11-12,Online shopping,Amazon,expense,shopping,2996.9,INR
+438,2025-11-13,Grocery purchase,Reliance Fresh,expense,groceries,700.64,INR
+439,2025-11-13,Grocery purchase,DMart,expense,groceries,1293.55,INR
+440,2025-11-13,Entertainment subscription,BookMyShow,expense,entertainment,565.14,INR
+441,2025-11-14,Grocery purchase,DMart,expense,groceries,1037.73,INR
+442,2025-11-16,Online shopping,Amazon,expense,shopping,2792.32,INR
+443,2025-11-18,Internet + mobile recharge,Airtel,expense,utilities,2019.0,INR
+444,2025-11-18,Food order,Zomato,expense,dining,721.47,INR
+445,2025-11-18,Medical expense,Apollo Pharmacy,expense,healthcare,1373.27,INR
+446,2025-11-18,Learning subscription,Udemy,expense,education,2038.99,INR
+447,2025-11-19,Online shopping,Flipkart,expense,shopping,3542.94,INR
+448,2025-11-20,Daily commute,IndianOil,expense,transport,532.28,INR
+449,2025-11-20,Daily commute,Ola,expense,transport,682.54,INR
+450,2025-11-21,Daily commute,IndianOil,expense,transport,152.72,INR
+451,2025-11-22,Online shopping,Myntra,expense,shopping,2987.66,INR
+452,2025-11-24,Daily commute,IndianOil,expense,transport,685.11,INR
+453,2025-11-25,Daily commute,IndianOil,expense,transport,928.09,INR
+454,2025-11-26,Daily commute,Ola,expense,transport,147.69,INR
+455,2025-11-26,Food order,Swiggy,expense,dining,657.7,INR
+456,2025-11-26,Medical expense,Practo,expense,healthcare,381.32,INR
+457,2025-11-27,Grocery purchase,DMart,expense,groceries,1380.14,INR
+458,2025-11-27,Food order,Zomato,expense,dining,1166.73,INR
+459,2025-11-28,Grocery purchase,Reliance Fresh,expense,groceries,918.16,INR
+460,2025-12-01,Monthly salary credit,Employer Pvt Ltd,income,salary,105213.0,INR
+461,2025-12-01,Daily commute,Uber,expense,transport,773.04,INR
+462,2025-12-01,Entertainment subscription,Netflix,expense,entertainment,464.63,INR
+463,2025-12-02,Grocery purchase,Reliance Fresh,expense,groceries,2790.43,INR
+464,2025-12-03,House rent payment,House Owner,expense,rent,23475.0,INR
+465,2025-12-04,Grocery purchase,BigBasket,expense,groceries,556.57,INR
+466,2025-12-04,Grocery purchase,BigBasket,expense,groceries,1001.78,INR
+467,2025-12-04,Food order,Cafe Coffee Day,expense,dining,1063.78,INR
+468,2025-12-04,Online shopping,Flipkart,expense,shopping,2364.2,INR
+469,2025-12-05,Food order,Cafe Coffee Day,expense,dining,182.89,INR
+470,2025-12-05,Entertainment subscription,Netflix,expense,entertainment,557.6,INR
+471,2025-12-05,Medical expense,Practo,expense,healthcare,1533.69,INR
+472,2025-12-07,Daily commute,Ola,expense,transport,489.1,INR
+473,2025-12-07,Daily commute,IndianOil,expense,transport,650.78,INR
+474,2025-12-07,Daily commute,Uber,expense,transport,808.75,INR
+475,2025-12-08,Electricity bill,TANGEDCO,expense,utilities,2529.0,INR
+476,2025-12-08,Daily commute,Ola,expense,transport,202.46,INR
+477,2025-12-08,Daily commute,Uber,expense,transport,773.19,INR
+478,2025-12-09,Daily commute,Uber,expense,transport,692.93,INR
+479,2025-12-09,Daily commute,Uber,expense,transport,923.61,INR
+480,2025-12-12,Grocery purchase,DMart,expense,groceries,2681.04,INR
+481,2025-12-14,Grocery purchase,DMart,expense,groceries,682.7,INR
+482,2025-12-15,Learning subscription,Coursera,expense,education,415.57,INR
+483,2025-12-16,Daily commute,IndianOil,expense,transport,458.74,INR
+484,2025-12-16,Learning subscription,Udemy,expense,education,1109.92,INR
+485,2025-12-18,Internet + mobile recharge,Airtel,expense,utilities,1736.0,INR
+486,2025-12-18,Grocery purchase,BigBasket,expense,groceries,1363.32,INR
+487,2025-12-18,Food order,Swiggy,expense,dining,778.11,INR
+488,2025-12-18,Food order,Zomato,expense,dining,994.48,INR
+489,2025-12-20,Online shopping,Amazon,expense,shopping,3190.8,INR
+490,2025-12-21,Daily commute,Ola,expense,transport,170.26,INR
+491,2025-12-22,Daily commute,Ola,expense,transport,571.91,INR
+492,2025-12-23,Grocery purchase,DMart,expense,groceries,1434.95,INR
+493,2025-12-24,Grocery purchase,DMart,expense,groceries,813.13,INR
+494,2025-12-24,Medical expense,Apollo Pharmacy,expense,healthcare,1421.55,INR
+495,2025-12-25,Online shopping,Flipkart,expense,shopping,2398.98,INR
+496,2025-12-26,Entertainment subscription,Netflix,expense,entertainment,788.44,INR
+497,2025-12-27,Food order,Swiggy,expense,dining,515.13,INR
+498,2025-12-28,Daily commute,Ola,expense,transport,196.09,INR
+499,2025-12-28,Food order,Swiggy,expense,dining,1187.28,INR
+500,2025-12-28,Online shopping,Myntra,expense,shopping,2429.37,INR
+501,2026-01-01,Monthly salary credit,Employer Pvt Ltd,income,salary,93537.0,INR
+502,2026-01-03,House rent payment,House Owner,expense,rent,25016.0,INR
+503,2026-01-03,Grocery purchase,BigBasket,expense,groceries,1206.96,INR
+504,2026-01-04,Daily commute,IndianOil,expense,transport,733.2,INR
+505,2026-01-04,Food order,Cafe Coffee Day,expense,dining,697.56,INR
+506,2026-01-05,Grocery purchase,BigBasket,expense,groceries,746.55,INR
+507,2026-01-05,Food order,Cafe Coffee Day,expense,dining,671.83,INR
+508,2026-01-08,Electricity bill,TANGEDCO,expense,utilities,2658.0,INR
+509,2026-01-09,Daily commute,Ola,expense,transport,911.48,INR
+510,2026-01-09,Entertainment subscription,BookMyShow,expense,entertainment,425.39,INR
+511,2026-01-09,Online shopping,Myntra,expense,shopping,3320.92,INR
+512,2026-01-10,Food order,Cafe Coffee Day,expense,dining,498.7,INR
+513,2026-01-10,Travel booking,MakeMyTrip,expense,travel,4665.31,INR
+514,2026-01-11,Daily commute,Ola,expense,transport,379.39,INR
+515,2026-01-11,Online shopping,Flipkart,expense,shopping,522.59,INR
+516,2026-01-13,Daily commute,Ola,expense,transport,725.58,INR
+517,2026-01-13,Online shopping,Amazon,expense,shopping,1024.94,INR
+518,2026-01-14,Daily commute,Ola,expense,transport,857.12,INR
+519,2026-01-14,Daily commute,Ola,expense,transport,806.76,INR
+520,2026-01-14,Food order,Cafe Coffee Day,expense,dining,232.48,INR

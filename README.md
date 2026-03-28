@@ -7,6 +7,8 @@ FinGenie is an AI-powered personal finance manager with a React dashboard, FastA
 - Automatic expense categorization with ML classifier (scikit-learn)
 - LSTM-based spending prediction (TensorFlow)
 - Smart budgeting system with category caps and 50/30/20 guidance
+- Savings goal tracking with progress pacing and monthly contribution planning
+- Manual net-worth tracking for assets and debts with snapshot history
 - AI financial advisor endpoint with actionable recommendations
 - Powerful Genie Assistant for chat-based automations:
   - task creation and status tracking
@@ -25,6 +27,7 @@ FinGenie is an AI-powered personal finance manager with a React dashboard, FastA
   - finance calculators: EMI, SIP, goal planner, retirement corpus
   - advanced calculators: debt payoff strategies, tax set-aside, emergency fund runway, net-worth projection
 - Analytics dashboard with charts, insights, and financial health score
+- Organized workspace layout with dedicated overview, planner, intelligence, transactions, assistant, and settings views
 
 ## Tech Stack
 - Frontend: React + Vite + Recharts
@@ -40,6 +43,7 @@ FinGenie is an AI-powered personal finance manager with a React dashboard, FastA
 - `GET /api/budgets/smart-plan` AI budget recommendations
 - `GET /api/analytics/summary` analytics payload for dashboard
 - `GET /api/analytics/health-score` financial health score breakdown
+- `GET /api/dashboard/overview` aggregated workspace payload for the frontend
 - `POST /api/advisor/query` ask the AI advisor
 - `POST /api/assistant/chat` run AI assistant (can execute automations from chat)
 - `GET|PUT /api/assistant/preferences` customization + preferences
@@ -47,6 +51,9 @@ FinGenie is an AI-powered personal finance manager with a React dashboard, FastA
 - `GET|POST /api/assistant/feedback` feedback + suggestions intake
 - `GET|POST /api/assistant/donations` donation pledge tracking
 - `GET /api/automation/insights` run AI/ML/DL automation insights
+- `GET|POST|PATCH|DELETE /api/planning/goals` savings goal tracking
+- `GET /api/planning/net-worth` net-worth overview
+- `POST|PATCH|DELETE /api/planning/accounts` manual asset / debt tracking
 - `POST /api/automation/calculate/loan-emi` EMI calculator
 - `POST /api/automation/calculate/sip` SIP projection
 - `POST /api/automation/calculate/goal-plan` goal planner

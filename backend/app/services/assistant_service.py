@@ -9,6 +9,7 @@ from sqlalchemy.orm import Session
 from app.models.assistant_task import AssistantTask, TaskPriority, TaskStatus
 from app.models.donation import Donation
 from app.models.feedback_entry import FeedbackEntry
+from app.models.user import User
 from app.models.user_preference import UserPreference
 from app.models.user_profile import UserProfile
 
@@ -86,42 +87,49 @@ def _detect_feedback_sentiment(message: str, rating: int | None) -> str:
     return "neutral"
 
 
-def get_or_create_preferences(db: Session) -> UserPreference:
-    pref = db.scalar(select(UserPreference).order_by(UserPreference.id))
+def get_or_create_preferences(db: Session, user: User) -> UserPreference:
+    pref = db.scalar(select(UserPreference).where(UserPreference.user_id == user.id).order_by(UserPreference.id))
     if pref:
         return pref
 
-    pref = UserPreference()
+    pref = UserPreference(user_id=user.id)
     db.add(pref)
     db.commit()
     db.refresh(pref)
     return pref
 
 
-def get_or_create_profile(db: Session) -> UserProfile:
-    profile = db.scalar(select(UserProfile).order_by(UserProfile.id))
+def get_or_create_profile(db: Session, user: User) -> UserProfile:
+    profile = db.scalar(select(UserProfile).where(UserProfile.user_id == user.id).order_by(UserProfile.id))
     if profile:
         return profile
 
-    profile = UserProfile()
+    profile = UserProfile(
+        user_id=user.id,
+        full_name=user.full_name,
+        email=user.email,
+        username=user.username,
+    )
     db.add(profile)
     db.commit()
     db.refresh(profile)
     return profile
 
 
-def list_tasks_query(limit: int = 50) -> Select[tuple[AssistantTask]]:
-    return select(AssistantTask).order_by(AssistantTask.created_at.desc()).limit(limit)
+def list_tasks_query(user_id: int, limit: int = 50) -> Select[tuple[AssistantTask]]:
+    return select(AssistantTask).where(AssistantTask.user_id == user_id).order_by(AssistantTask.created_at.desc()).limit(limit)
 
 
 def create_task(
     db: Session,
+    user_id: int,
     title: str,
     details: str | None,
     due_date: date | None,
     priority: TaskPriority,
 ) -> AssistantTask:
     task = AssistantTask(
+        user_id=user_id,
         title=title,
         details=details,
         due_date=due_date,
@@ -134,13 +142,14 @@ def create_task(
     return task
 
 
-def automate_from_chat(message: str, db: Session, preferences: UserPreference) -> list[str]:
+def automate_from_chat(message: str, db: Session, user: User, preferences: UserPreference) -> list[str]:
     events: list[str] = []
     lowered = message.lower()
 
     if "create task" in lowered or lowered.startswith("task:"):
         title = _extract_task_title(message)
         task = AssistantTask(
+            user_id=user.id,
             title=title,
             details=None,
             due_date=_infer_due_date(message),
@@ -191,6 +200,7 @@ def automate_from_chat(message: str, db: Session, preferences: UserPreference) -
                     cause = candidate
                     break
             donation = Donation(cause=cause, amount=amount, recurring=("monthly" in lowered or "recurring" in lowered))
+            donation.user_id = user.id
             db.add(donation)
             db.flush()
             events.append(f"Created donation pledge #{donation.id} for {amount:.2f} to {cause}")
@@ -199,6 +209,7 @@ def automate_from_chat(message: str, db: Session, preferences: UserPreference) -
         feedback_msg = message.split(":", 1)[1].strip()
         if feedback_msg:
             feedback = FeedbackEntry(
+                user_id=user.id,
                 category="chat",
                 message=feedback_msg,
                 rating=None,

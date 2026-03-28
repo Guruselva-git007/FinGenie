@@ -10,6 +10,7 @@ class Donation(Base):
     __tablename__ = "donations"
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
+    user_id: Mapped[int | None] = mapped_column(Integer, index=True, nullable=True)
     cause: Mapped[str] = mapped_column(String(80), nullable=False)
     amount: Mapped[float] = mapped_column(Float, nullable=False)
     recurring: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)

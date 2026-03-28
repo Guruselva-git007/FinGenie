@@ -10,6 +10,7 @@ class UserProfile(Base):
     __tablename__ = "user_profiles"
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
+    user_id: Mapped[int | None] = mapped_column(Integer, index=True, nullable=True)
 
     full_name: Mapped[str] = mapped_column(String(120), default="FinGenie User", nullable=False)
     email: Mapped[str] = mapped_column(String(180), default="user@example.com", nullable=False)

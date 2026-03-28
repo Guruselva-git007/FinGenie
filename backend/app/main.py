@@ -5,7 +5,21 @@ from app.api.router import api_router
 from app.core.config import settings
 from app.db.base import Base
 from app.db.session import engine
-from app.models import assistant_task, budget, donation, feedback_entry, transaction, user_preference, user_profile  # noqa: F401
+from app.models import (  # noqa: F401
+    assistant_task,
+    branch_account,
+    budget,
+    donation,
+    feedback_entry,
+    net_worth_snapshot,
+    savings_goal,
+    transaction,
+    user,
+    user_preference,
+    user_profile,
+    wealth_account,
+)
+from app.services.db_migration_service import ensure_runtime_schema
 
 app = FastAPI(title=settings.app_name, version=settings.app_version)
 
@@ -21,6 +35,7 @@ app.add_middleware(
 @app.on_event("startup")
 def on_startup() -> None:
     Base.metadata.create_all(bind=engine)
+    ensure_runtime_schema(engine)
 
 
 @app.get("/health")

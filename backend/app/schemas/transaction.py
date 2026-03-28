@@ -11,6 +11,7 @@ class TransactionBase(BaseModel):
     category: str | None = Field(default=None, max_length=64)
     kind: TransactionKind = TransactionKind.EXPENSE
     merchant: str | None = Field(default=None, max_length=120)
+    branch_account_id: int | None = Field(default=None, ge=1)
     transaction_date: date = Field(default_factory=date.today)
 
 

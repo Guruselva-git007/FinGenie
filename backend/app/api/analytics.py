@@ -2,9 +2,10 @@ from fastapi import APIRouter, Depends, Query
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from app.api.deps import get_db_session
+from app.api.deps import get_current_user, get_db_session
 from app.models.budget import Budget
 from app.models.transaction import Transaction
+from app.models.user import User
 from app.schemas.analytics import AnalyticsSummaryResponse, HealthScoreResponse
 from app.services.analytics_service import build_analytics_summary
 from app.services.health_score_service import compute_financial_health
@@ -16,14 +17,15 @@ router = APIRouter(prefix="/analytics", tags=["analytics"])
 def analytics_summary(
     forecast_months: int = Query(default=3, ge=1, le=12),
     db: Session = Depends(get_db_session),
+    current_user: User = Depends(get_current_user),
 ):
-    transactions = db.scalars(select(Transaction)).all()
-    budgets = db.scalars(select(Budget)).all()
+    transactions = db.scalars(select(Transaction).where(Transaction.user_id == current_user.id)).all()
+    budgets = db.scalars(select(Budget).where(Budget.user_id == current_user.id)).all()
     return build_analytics_summary(transactions, budgets, forecast_months=forecast_months)
 
 
 @router.get("/health-score", response_model=HealthScoreResponse)
-def health_score(db: Session = Depends(get_db_session)):
-    transactions = db.scalars(select(Transaction)).all()
-    budgets = db.scalars(select(Budget)).all()
+def health_score(db: Session = Depends(get_db_session), current_user: User = Depends(get_current_user)):
+    transactions = db.scalars(select(Transaction).where(Transaction.user_id == current_user.id)).all()
+    budgets = db.scalars(select(Budget).where(Budget.user_id == current_user.id)).all()
     return compute_financial_health(transactions, budgets)

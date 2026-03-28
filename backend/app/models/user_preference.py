@@ -10,7 +10,8 @@ class UserPreference(Base):
     __tablename__ = "user_preferences"
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
-    currency: Mapped[str] = mapped_column(String(8), default="USD", nullable=False)
+    user_id: Mapped[int | None] = mapped_column(Integer, index=True, nullable=True)
+    currency: Mapped[str] = mapped_column(String(8), default="INR", nullable=False)
     monthly_savings_target: Mapped[float] = mapped_column(Float, default=500.0, nullable=False)
     risk_profile: Mapped[str] = mapped_column(String(24), default="balanced", nullable=False)
     theme: Mapped[str] = mapped_column(String(32), default="minimal-light", nullable=False)

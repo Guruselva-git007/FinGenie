@@ -1,16 +1,21 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 
 import api from '../api/client';
 
-const currency = new Intl.NumberFormat('en-US', {
+const currency = new Intl.NumberFormat('en-IN', {
   style: 'currency',
-  currency: 'USD',
+  currency: 'INR',
   maximumFractionDigits: 0,
 });
 
-export default function AutomationLab({ onError }) {
-  const [insights, setInsights] = useState(null);
-  const [loading, setLoading] = useState(true);
+const tabs = [
+  { key: 'monitor', label: 'Monitors' },
+  { key: 'forecast', label: 'Forecasts' },
+  { key: 'calculator', label: 'Calculators' },
+];
+
+export default function AutomationLab({ insights, loading, onRefresh, onError }) {
+  const [activeTab, setActiveTab] = useState('monitor');
 
   const [loanInput, setLoanInput] = useState({ principal: 20000, annual_rate: 11, tenure_months: 60 });
   const [sipInput, setSipInput] = useState({ monthly_investment: 300, annual_return_rate: 12, years: 10, annual_step_up_pct: 5 });
@@ -37,23 +42,6 @@ export default function AutomationLab({ onError }) {
   const [efResult, setEfResult] = useState(null);
   const [nwResult, setNwResult] = useState(null);
   const [debtResult, setDebtResult] = useState(null);
-
-  const loadInsights = async () => {
-    setLoading(true);
-    try {
-      const response = await api.get('/automation/insights?forecast_months=4');
-      setInsights(response.data);
-    } catch (err) {
-      const message = err?.response?.data?.detail || err.message || 'Failed to load automation insights.';
-      onError(message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    loadInsights();
-  }, []);
 
   const postCalc = async (path, payload, setResult, fallbackMessage) => {
     try {
@@ -159,214 +147,239 @@ export default function AutomationLab({ onError }) {
     }));
   };
 
-  return (
-    <div className="automation-lab">
-      <div className="panel-head">
-        <h3>AI/ML/DL Automation Lab</h3>
-        <button className="secondary" onClick={loadInsights}>Refresh Models</button>
+  const renderMonitorTab = () => (
+    <div className="automation-grid">
+      <div className="auto-card">
+        <h4>Anomaly Detection</h4>
+        {insights?.anomalies?.length === 0 && <p className="muted">No anomalies detected.</p>}
+        {insights?.anomalies?.map((item) => (
+          <div className="auto-row" key={`${item.transaction_id}-${item.anomaly_score}`}>
+            <strong>{item.description}</strong>
+            <p>{item.category} • {currency.format(item.amount)} • score {item.anomaly_score}</p>
+            <p className="muted">{item.reason}</p>
+          </div>
+        ))}
       </div>
 
-      {loading && <p className="muted">Running models...</p>}
-
-      {insights && (
-        <>
-          <div className="automation-grid">
-            <div className="auto-card">
-              <h4>Anomaly Detection (Isolation Forest)</h4>
-              {insights.anomalies.length === 0 && <p className="muted">No anomalies detected.</p>}
-              {insights.anomalies.map((item) => (
-                <div className="auto-row" key={`${item.transaction_id}-${item.anomaly_score}`}>
-                  <strong>{item.description}</strong>
-                  <p>{item.category} | {currency.format(item.amount)} | score {item.anomaly_score}</p>
-                  <p className="muted">{item.reason}</p>
-                </div>
-              ))}
-            </div>
-
-            <div className="auto-card">
-              <h4>Recurring + Bill Calendar</h4>
-              {insights.recurring_expenses.slice(0, 3).map((item) => (
-                <div className="auto-row" key={`${item.description}-${item.next_expected_date}`}>
-                  <strong>{item.description}</strong>
-                  <p>{item.cadence} | {currency.format(item.amount)} | next {item.next_expected_date}</p>
-                </div>
-              ))}
-              {insights.bill_calendar.slice(0, 4).map((bill) => (
-                <div className="auto-mini" key={`${bill.description}-${bill.due_date}`}>
-                  <span>{bill.description} ({bill.days_left}d)</span>
-                  <strong>{currency.format(bill.amount)}</strong>
-                </div>
-              ))}
-            </div>
-
-            <div className="auto-card">
-              <h4>Subscription Optimizer</h4>
-              {insights.subscription_opportunities.length === 0 && <p className="muted">No subscription opportunities found.</p>}
-              {insights.subscription_opportunities.map((item) => (
-                <div className="auto-row" key={`${item.description}-${item.annual_cost}`}>
-                  <strong>{item.description}</strong>
-                  <p>{currency.format(item.monthly_cost)} / month | {currency.format(item.annual_cost)} / year</p>
-                  <p className="muted">{item.action}</p>
-                </div>
-              ))}
-            </div>
-
-            <div className="auto-card">
-              <h4>Envelope / Jars System</h4>
-              {insights.envelope_jars.map((jar) => (
-                <div className="auto-mini" key={jar.jar}>
-                  <span>{jar.jar}</span>
-                  <strong>{currency.format(jar.actual_amount)} / {currency.format(jar.target_amount)}</strong>
-                </div>
-              ))}
-            </div>
-
-            <div className="auto-card">
-              <h4>Savings Prediction (ML)</h4>
-              {insights.savings_prediction_ml.map((item) => (
-                <div className="auto-mini" key={`ml-${item.month}`}>
-                  <span>{item.month}</span>
-                  <strong>{currency.format(item.predicted_net_savings)}</strong>
-                </div>
-              ))}
-            </div>
-
-            <div className="auto-card">
-              <h4>Savings Prediction (DL)</h4>
-              {insights.savings_prediction_dl.map((item) => (
-                <div className="auto-mini" key={`dl-${item.month}`}>
-                  <span>{item.month}</span>
-                  <strong>{currency.format(item.predicted_net_savings)}</strong>
-                </div>
-              ))}
-            </div>
+      <div className="auto-card">
+        <h4>Recurring + Bill Calendar</h4>
+        {insights?.bill_calendar?.slice(0, 6).map((bill) => (
+          <div className="auto-mini" key={`${bill.description}-${bill.due_date}`}>
+            <span>{bill.description} ({bill.days_left}d)</span>
+            <strong>{currency.format(bill.amount)}</strong>
           </div>
+        ))}
+        {insights?.bill_calendar?.length === 0 && <p className="muted">No scheduled bills detected.</p>}
+      </div>
 
-          <div className="auto-card">
-            <h4>Budget Optimization + Nudges</h4>
+      <div className="auto-card">
+        <h4>Subscription Optimizer</h4>
+        {insights?.subscription_opportunities?.length === 0 && <p className="muted">No subscription opportunities found.</p>}
+        {insights?.subscription_opportunities?.map((item) => (
+          <div className="auto-row" key={`${item.description}-${item.annual_cost}`}>
+            <strong>{item.description}</strong>
+            <p>{currency.format(item.monthly_cost)} / month • {currency.format(item.annual_cost)} / year</p>
+            <p className="muted">{item.action}</p>
+          </div>
+        ))}
+      </div>
+
+      <div className="auto-card">
+        <h4>Behavior Nudges</h4>
+        <ul className="insight-list">
+          {(insights?.behavior_nudges || []).map((nudge) => (
+            <li key={nudge}>{nudge}</li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  );
+
+  const renderForecastTab = () => (
+    <div className="automation-grid">
+      <div className="auto-card">
+        <h4>Envelope / Jars System</h4>
+        {insights?.envelope_jars?.map((jar) => (
+          <div className="auto-mini" key={jar.jar}>
+            <span>{jar.jar}</span>
+            <strong>{currency.format(jar.actual_amount)} / {currency.format(jar.target_amount)}</strong>
+          </div>
+        ))}
+      </div>
+
+      <div className="auto-card">
+        <h4>Savings Prediction (ML)</h4>
+        {insights?.savings_prediction_ml?.map((item) => (
+          <div className="auto-mini" key={`ml-${item.month}`}>
+            <span>{item.month}</span>
+            <strong>{currency.format(item.predicted_net_savings)}</strong>
+          </div>
+        ))}
+      </div>
+
+      <div className="auto-card">
+        <h4>Savings Prediction (DL)</h4>
+        {insights?.savings_prediction_dl?.map((item) => (
+          <div className="auto-mini" key={`dl-${item.month}`}>
+            <span>{item.month}</span>
+            <strong>{currency.format(item.predicted_net_savings)}</strong>
+          </div>
+        ))}
+      </div>
+
+      <div className="auto-card span-2">
+        <h4>Budget Optimization + Action List</h4>
+        {insights?.budget_optimization && (
+          <>
             <p className="muted">
-              Current savings rate: {(insights.budget_optimization.current_savings_rate * 100).toFixed(1)}% | Target: {(insights.budget_optimization.target_savings_rate * 100).toFixed(1)}%
+              Current savings rate: {(insights.budget_optimization.current_savings_rate * 100).toFixed(1)}% • Target: {(insights.budget_optimization.target_savings_rate * 100).toFixed(1)}%
             </p>
             <p className="muted">Monthly reduction needed: {currency.format(insights.budget_optimization.monthly_reduction_needed)}</p>
             <div className="budget-plan-grid">
               {insights.budget_optimization.budget_plan.slice(0, 8).map((item) => (
                 <div className="auto-row" key={`plan-${item.category}`}>
                   <strong>{item.category}</strong>
-                  <p>Current {currency.format(item.current_avg_spend)} {'->'} Recommended {currency.format(item.recommended_limit)}</p>
+                  <p>Current {currency.format(item.current_avg_spend)} → Recommended {currency.format(item.recommended_limit)}</p>
                   <p className="muted">Suggested cut: {currency.format(item.suggested_cut)}</p>
                 </div>
               ))}
             </div>
-            <ul>
-              {insights.auto_actions.map((action) => (
+            <ul className="insight-list">
+              {(insights.auto_actions || []).map((action) => (
                 <li key={action}>{action}</li>
               ))}
-              {insights.behavior_nudges.map((nudge) => (
-                <li key={nudge}>{nudge}</li>
-              ))}
             </ul>
-          </div>
-        </>
-      )}
-
-      <div className="calculator-grid">
-        <form className="auto-card calculator" onSubmit={runLoan}>
-          <h4>Loan EMI Calculator</h4>
-          <input type="number" value={loanInput.principal} onChange={(e) => setLoanInput((p) => ({ ...p, principal: e.target.value }))} placeholder="Principal" />
-          <input type="number" value={loanInput.annual_rate} onChange={(e) => setLoanInput((p) => ({ ...p, annual_rate: e.target.value }))} placeholder="Annual rate %" />
-          <input type="number" value={loanInput.tenure_months} onChange={(e) => setLoanInput((p) => ({ ...p, tenure_months: e.target.value }))} placeholder="Tenure months" />
-          <button type="submit">Calculate EMI</button>
-          {loanResult && <p className="muted">EMI {currency.format(loanResult.emi)} | Interest {currency.format(loanResult.total_interest)}</p>}
-        </form>
-
-        <form className="auto-card calculator" onSubmit={runSip}>
-          <h4>SIP Projection</h4>
-          <input type="number" value={sipInput.monthly_investment} onChange={(e) => setSipInput((p) => ({ ...p, monthly_investment: e.target.value }))} placeholder="Monthly investment" />
-          <input type="number" value={sipInput.annual_return_rate} onChange={(e) => setSipInput((p) => ({ ...p, annual_return_rate: e.target.value }))} placeholder="Annual return %" />
-          <input type="number" value={sipInput.years} onChange={(e) => setSipInput((p) => ({ ...p, years: e.target.value }))} placeholder="Years" />
-          <input type="number" value={sipInput.annual_step_up_pct} onChange={(e) => setSipInput((p) => ({ ...p, annual_step_up_pct: e.target.value }))} placeholder="Step-up %" />
-          <button type="submit">Project SIP</button>
-          {sipResult && <p className="muted">Future value {currency.format(sipResult.future_value)} | Returns {currency.format(sipResult.estimated_returns)}</p>}
-        </form>
-
-        <form className="auto-card calculator" onSubmit={runGoal}>
-          <h4>Goal Planner</h4>
-          <input type="number" value={goalInput.target_amount} onChange={(e) => setGoalInput((p) => ({ ...p, target_amount: e.target.value }))} placeholder="Target amount" />
-          <input type="number" value={goalInput.years} onChange={(e) => setGoalInput((p) => ({ ...p, years: e.target.value }))} placeholder="Years" />
-          <input type="number" value={goalInput.expected_annual_return_rate} onChange={(e) => setGoalInput((p) => ({ ...p, expected_annual_return_rate: e.target.value }))} placeholder="Expected return %" />
-          <input type="number" value={goalInput.current_savings} onChange={(e) => setGoalInput((p) => ({ ...p, current_savings: e.target.value }))} placeholder="Current savings" />
-          <button type="submit">Plan Goal</button>
-          {goalResult && <p className="muted">Required monthly investment {currency.format(goalResult.required_monthly_investment)}</p>}
-        </form>
-
-        <form className="auto-card calculator" onSubmit={runRetirement}>
-          <h4>Retirement Planner</h4>
-          <input type="number" value={retInput.current_age} onChange={(e) => setRetInput((p) => ({ ...p, current_age: e.target.value }))} placeholder="Current age" />
-          <input type="number" value={retInput.retirement_age} onChange={(e) => setRetInput((p) => ({ ...p, retirement_age: e.target.value }))} placeholder="Retirement age" />
-          <input type="number" value={retInput.monthly_expense_today} onChange={(e) => setRetInput((p) => ({ ...p, monthly_expense_today: e.target.value }))} placeholder="Monthly expense today" />
-          <input type="number" value={retInput.inflation_rate} onChange={(e) => setRetInput((p) => ({ ...p, inflation_rate: e.target.value }))} placeholder="Inflation %" />
-          <input type="number" value={retInput.post_retirement_return_rate} onChange={(e) => setRetInput((p) => ({ ...p, post_retirement_return_rate: e.target.value }))} placeholder="Post-retirement return %" />
-          <input type="number" value={retInput.life_expectancy} onChange={(e) => setRetInput((p) => ({ ...p, life_expectancy: e.target.value }))} placeholder="Life expectancy" />
-          <button type="submit">Plan Retirement</button>
-          {retResult && <p className="muted">Required corpus {currency.format(retResult.required_retirement_corpus)}</p>}
-        </form>
-
-        <form className="auto-card calculator" onSubmit={runDebtPayoff}>
-          <h4>Debt Payoff (Avalanche/Snowball)</h4>
-          <select value={debtInput.strategy} onChange={(e) => setDebtInput((p) => ({ ...p, strategy: e.target.value }))}>
-            <option value="avalanche">avalanche</option>
-            <option value="snowball">snowball</option>
-          </select>
-          <input type="number" value={debtInput.extra_payment} onChange={(e) => setDebtInput((p) => ({ ...p, extra_payment: e.target.value }))} placeholder="Extra monthly payment" />
-          {debtInput.debts.map((row, index) => (
-            <div className="debt-row" key={`debt-${index}`}>
-              <input value={row.name} onChange={(e) => updateDebtRow(index, 'name', e.target.value)} placeholder="Debt name" />
-              <input type="number" value={row.balance} onChange={(e) => updateDebtRow(index, 'balance', e.target.value)} placeholder="Balance" />
-              <input type="number" value={row.annual_rate} onChange={(e) => updateDebtRow(index, 'annual_rate', e.target.value)} placeholder="APR %" />
-              <input type="number" value={row.min_payment} onChange={(e) => updateDebtRow(index, 'min_payment', e.target.value)} placeholder="Min payment" />
-            </div>
-          ))}
-          <button type="submit">Simulate Debt Payoff</button>
-          {debtResult && (
-            <p className="muted">
-              Debt free in {debtResult.months_to_debt_free} months | Interest {currency.format(debtResult.total_interest_paid)}
-            </p>
-          )}
-        </form>
-
-        <form className="auto-card calculator" onSubmit={runTax}>
-          <h4>Tax Set-Aside Planner</h4>
-          <input type="number" value={taxInput.monthly_income} onChange={(e) => setTaxInput((p) => ({ ...p, monthly_income: e.target.value }))} placeholder="Monthly income" />
-          <input type="number" value={taxInput.effective_tax_rate} onChange={(e) => setTaxInput((p) => ({ ...p, effective_tax_rate: e.target.value }))} placeholder="Effective tax %" />
-          <input type="number" value={taxInput.safety_buffer_pct} onChange={(e) => setTaxInput((p) => ({ ...p, safety_buffer_pct: e.target.value }))} placeholder="Buffer %" />
-          <button type="submit">Plan Tax Reserve</button>
-          {taxResult && <p className="muted">Monthly reserve {currency.format(taxResult.monthly_tax_set_aside)} | Quarterly {currency.format(taxResult.quarterly_tax_set_aside)}</p>}
-        </form>
-
-        <form className="auto-card calculator" onSubmit={runEmergencyFund}>
-          <h4>Emergency Fund Runway</h4>
-          <input type="number" value={efInput.current_fund} onChange={(e) => setEfInput((p) => ({ ...p, current_fund: e.target.value }))} placeholder="Current fund" />
-          <input type="number" value={efInput.monthly_expense} onChange={(e) => setEfInput((p) => ({ ...p, monthly_expense: e.target.value }))} placeholder="Monthly expense" />
-          <input type="number" value={efInput.target_months} onChange={(e) => setEfInput((p) => ({ ...p, target_months: e.target.value }))} placeholder="Target months" />
-          <input type="number" value={efInput.monthly_contribution} onChange={(e) => setEfInput((p) => ({ ...p, monthly_contribution: e.target.value }))} placeholder="Monthly contribution" />
-          <input type="number" value={efInput.annual_return_rate} onChange={(e) => setEfInput((p) => ({ ...p, annual_return_rate: e.target.value }))} placeholder="Return %" />
-          <button type="submit">Project Emergency Fund</button>
-          {efResult && <p className="muted">Gap {currency.format(efResult.funding_gap)} | Months to target {efResult.months_to_target}</p>}
-        </form>
-
-        <form className="auto-card calculator" onSubmit={runNetWorthProjection}>
-          <h4>Net Worth Projection</h4>
-          <input type="number" value={nwInput.current_assets} onChange={(e) => setNwInput((p) => ({ ...p, current_assets: e.target.value }))} placeholder="Current assets" />
-          <input type="number" value={nwInput.current_liabilities} onChange={(e) => setNwInput((p) => ({ ...p, current_liabilities: e.target.value }))} placeholder="Current liabilities" />
-          <input type="number" value={nwInput.monthly_investment} onChange={(e) => setNwInput((p) => ({ ...p, monthly_investment: e.target.value }))} placeholder="Monthly investment" />
-          <input type="number" value={nwInput.annual_return_rate} onChange={(e) => setNwInput((p) => ({ ...p, annual_return_rate: e.target.value }))} placeholder="Return %" />
-          <input type="number" value={nwInput.months} onChange={(e) => setNwInput((p) => ({ ...p, months: e.target.value }))} placeholder="Months" />
-          <input type="number" value={nwInput.monthly_liability_payment} onChange={(e) => setNwInput((p) => ({ ...p, monthly_liability_payment: e.target.value }))} placeholder="Liability payment" />
-          <input type="number" value={nwInput.liability_interest_rate} onChange={(e) => setNwInput((p) => ({ ...p, liability_interest_rate: e.target.value }))} placeholder="Liability rate %" />
-          <button type="submit">Project Net Worth</button>
-          {nwResult && <p className="muted">Start {currency.format(nwResult.start_net_worth)} {'->'} Projected {currency.format(nwResult.projected_net_worth)}</p>}
-        </form>
+          </>
+        )}
       </div>
+    </div>
+  );
+
+  const renderCalculatorTab = () => (
+    <div className="calculator-grid">
+      <form className="auto-card calculator" onSubmit={runLoan}>
+        <h4>Loan EMI Calculator</h4>
+        <input type="number" value={loanInput.principal} onChange={(e) => setLoanInput((p) => ({ ...p, principal: e.target.value }))} placeholder="Principal" />
+        <input type="number" value={loanInput.annual_rate} onChange={(e) => setLoanInput((p) => ({ ...p, annual_rate: e.target.value }))} placeholder="Annual rate %" />
+        <input type="number" value={loanInput.tenure_months} onChange={(e) => setLoanInput((p) => ({ ...p, tenure_months: e.target.value }))} placeholder="Tenure months" />
+        <button type="submit">Calculate EMI</button>
+        {loanResult && <p className="muted">EMI {currency.format(loanResult.emi)} • Interest {currency.format(loanResult.total_interest)}</p>}
+      </form>
+
+      <form className="auto-card calculator" onSubmit={runSip}>
+        <h4>SIP Projection</h4>
+        <input type="number" value={sipInput.monthly_investment} onChange={(e) => setSipInput((p) => ({ ...p, monthly_investment: e.target.value }))} placeholder="Monthly investment" />
+        <input type="number" value={sipInput.annual_return_rate} onChange={(e) => setSipInput((p) => ({ ...p, annual_return_rate: e.target.value }))} placeholder="Annual return %" />
+        <input type="number" value={sipInput.years} onChange={(e) => setSipInput((p) => ({ ...p, years: e.target.value }))} placeholder="Years" />
+        <input type="number" value={sipInput.annual_step_up_pct} onChange={(e) => setSipInput((p) => ({ ...p, annual_step_up_pct: e.target.value }))} placeholder="Step-up %" />
+        <button type="submit">Project SIP</button>
+        {sipResult && <p className="muted">Future value {currency.format(sipResult.future_value)} • Returns {currency.format(sipResult.estimated_returns)}</p>}
+      </form>
+
+      <form className="auto-card calculator" onSubmit={runGoal}>
+        <h4>Goal Planner</h4>
+        <input type="number" value={goalInput.target_amount} onChange={(e) => setGoalInput((p) => ({ ...p, target_amount: e.target.value }))} placeholder="Target amount" />
+        <input type="number" value={goalInput.years} onChange={(e) => setGoalInput((p) => ({ ...p, years: e.target.value }))} placeholder="Years" />
+        <input type="number" value={goalInput.expected_annual_return_rate} onChange={(e) => setGoalInput((p) => ({ ...p, expected_annual_return_rate: e.target.value }))} placeholder="Expected return %" />
+        <input type="number" value={goalInput.current_savings} onChange={(e) => setGoalInput((p) => ({ ...p, current_savings: e.target.value }))} placeholder="Current savings" />
+        <button type="submit">Plan Goal</button>
+        {goalResult && <p className="muted">Required monthly investment {currency.format(goalResult.required_monthly_investment)}</p>}
+      </form>
+
+      <form className="auto-card calculator" onSubmit={runRetirement}>
+        <h4>Retirement Planner</h4>
+        <input type="number" value={retInput.current_age} onChange={(e) => setRetInput((p) => ({ ...p, current_age: e.target.value }))} placeholder="Current age" />
+        <input type="number" value={retInput.retirement_age} onChange={(e) => setRetInput((p) => ({ ...p, retirement_age: e.target.value }))} placeholder="Retirement age" />
+        <input type="number" value={retInput.monthly_expense_today} onChange={(e) => setRetInput((p) => ({ ...p, monthly_expense_today: e.target.value }))} placeholder="Monthly expense today" />
+        <input type="number" value={retInput.inflation_rate} onChange={(e) => setRetInput((p) => ({ ...p, inflation_rate: e.target.value }))} placeholder="Inflation %" />
+        <input type="number" value={retInput.post_retirement_return_rate} onChange={(e) => setRetInput((p) => ({ ...p, post_retirement_return_rate: e.target.value }))} placeholder="Post-retirement return %" />
+        <input type="number" value={retInput.life_expectancy} onChange={(e) => setRetInput((p) => ({ ...p, life_expectancy: e.target.value }))} placeholder="Life expectancy" />
+        <button type="submit">Plan Retirement</button>
+        {retResult && <p className="muted">Required corpus {currency.format(retResult.required_retirement_corpus)}</p>}
+      </form>
+
+      <form className="auto-card calculator" onSubmit={runDebtPayoff}>
+        <h4>Debt Payoff</h4>
+        <select value={debtInput.strategy} onChange={(e) => setDebtInput((p) => ({ ...p, strategy: e.target.value }))}>
+          <option value="avalanche">avalanche</option>
+          <option value="snowball">snowball</option>
+        </select>
+        <input type="number" value={debtInput.extra_payment} onChange={(e) => setDebtInput((p) => ({ ...p, extra_payment: e.target.value }))} placeholder="Extra monthly payment" />
+        {debtInput.debts.map((row, index) => (
+          <div className="debt-row" key={`debt-${index}`}>
+            <input value={row.name} onChange={(e) => updateDebtRow(index, 'name', e.target.value)} placeholder="Debt name" />
+            <input type="number" value={row.balance} onChange={(e) => updateDebtRow(index, 'balance', e.target.value)} placeholder="Balance" />
+            <input type="number" value={row.annual_rate} onChange={(e) => updateDebtRow(index, 'annual_rate', e.target.value)} placeholder="APR %" />
+            <input type="number" value={row.min_payment} onChange={(e) => updateDebtRow(index, 'min_payment', e.target.value)} placeholder="Min payment" />
+          </div>
+        ))}
+        <button type="submit">Simulate Debt Payoff</button>
+        {debtResult && <p className="muted">Debt free in {debtResult.months_to_debt_free} months • Interest {currency.format(debtResult.total_interest_paid)}</p>}
+      </form>
+
+      <form className="auto-card calculator" onSubmit={runTax}>
+        <h4>Tax Set-Aside Planner</h4>
+        <input type="number" value={taxInput.monthly_income} onChange={(e) => setTaxInput((p) => ({ ...p, monthly_income: e.target.value }))} placeholder="Monthly income" />
+        <input type="number" value={taxInput.effective_tax_rate} onChange={(e) => setTaxInput((p) => ({ ...p, effective_tax_rate: e.target.value }))} placeholder="Effective tax %" />
+        <input type="number" value={taxInput.safety_buffer_pct} onChange={(e) => setTaxInput((p) => ({ ...p, safety_buffer_pct: e.target.value }))} placeholder="Buffer %" />
+        <button type="submit">Plan Tax Reserve</button>
+        {taxResult && <p className="muted">Monthly reserve {currency.format(taxResult.monthly_tax_set_aside)} • Quarterly {currency.format(taxResult.quarterly_tax_set_aside)}</p>}
+      </form>
+
+      <form className="auto-card calculator" onSubmit={runEmergencyFund}>
+        <h4>Emergency Fund Runway</h4>
+        <input type="number" value={efInput.current_fund} onChange={(e) => setEfInput((p) => ({ ...p, current_fund: e.target.value }))} placeholder="Current fund" />
+        <input type="number" value={efInput.monthly_expense} onChange={(e) => setEfInput((p) => ({ ...p, monthly_expense: e.target.value }))} placeholder="Monthly expense" />
+        <input type="number" value={efInput.target_months} onChange={(e) => setEfInput((p) => ({ ...p, target_months: e.target.value }))} placeholder="Target months" />
+        <input type="number" value={efInput.monthly_contribution} onChange={(e) => setEfInput((p) => ({ ...p, monthly_contribution: e.target.value }))} placeholder="Monthly contribution" />
+        <input type="number" value={efInput.annual_return_rate} onChange={(e) => setEfInput((p) => ({ ...p, annual_return_rate: e.target.value }))} placeholder="Return %" />
+        <button type="submit">Project Emergency Fund</button>
+        {efResult && <p className="muted">Gap {currency.format(efResult.funding_gap)} • Months to target {efResult.months_to_target}</p>}
+      </form>
+
+      <form className="auto-card calculator" onSubmit={runNetWorthProjection}>
+        <h4>Net Worth Projection</h4>
+        <input type="number" value={nwInput.current_assets} onChange={(e) => setNwInput((p) => ({ ...p, current_assets: e.target.value }))} placeholder="Current assets" />
+        <input type="number" value={nwInput.current_liabilities} onChange={(e) => setNwInput((p) => ({ ...p, current_liabilities: e.target.value }))} placeholder="Current liabilities" />
+        <input type="number" value={nwInput.monthly_investment} onChange={(e) => setNwInput((p) => ({ ...p, monthly_investment: e.target.value }))} placeholder="Monthly investment" />
+        <input type="number" value={nwInput.annual_return_rate} onChange={(e) => setNwInput((p) => ({ ...p, annual_return_rate: e.target.value }))} placeholder="Return %" />
+        <input type="number" value={nwInput.months} onChange={(e) => setNwInput((p) => ({ ...p, months: e.target.value }))} placeholder="Months" />
+        <input type="number" value={nwInput.monthly_liability_payment} onChange={(e) => setNwInput((p) => ({ ...p, monthly_liability_payment: e.target.value }))} placeholder="Liability payment" />
+        <input type="number" value={nwInput.liability_interest_rate} onChange={(e) => setNwInput((p) => ({ ...p, liability_interest_rate: e.target.value }))} placeholder="Liability rate %" />
+        <button type="submit">Project Net Worth</button>
+        {nwResult && <p className="muted">Start {currency.format(nwResult.start_net_worth)} → Projected {currency.format(nwResult.projected_net_worth)}</p>}
+      </form>
+    </div>
+  );
+
+  return (
+    <div className="automation-lab">
+      <div className="panel-head">
+        <div>
+          <h3>Automation & Intelligence Lab</h3>
+        </div>
+        <button className="secondary" onClick={onRefresh}>Refresh Models</button>
+      </div>
+
+      <div className="tab-row" role="tablist" aria-label="Automation Views">
+        {tabs.map((tab) => (
+          <button
+            key={tab.key}
+            type="button"
+            className={`tab-chip ${activeTab === tab.key ? 'active' : ''}`}
+            onClick={() => setActiveTab(tab.key)}
+          >
+            {tab.label}
+          </button>
+        ))}
+      </div>
+
+      {loading && <p className="muted">Running models...</p>}
+      {!loading && !insights && <p className="muted">Open this workspace after loading data to see finance intelligence.</p>}
+
+      {activeTab === 'monitor' && insights && renderMonitorTab()}
+      {activeTab === 'forecast' && insights && renderForecastTab()}
+      {activeTab === 'calculator' && renderCalculatorTab()}
     </div>
   );
 }

@@ -23,6 +23,7 @@ class AssistantTask(Base):
     __tablename__ = "assistant_tasks"
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
+    user_id: Mapped[int | None] = mapped_column(Integer, index=True, nullable=True)
     title: Mapped[str] = mapped_column(String(160), nullable=False)
     details: Mapped[str | None] = mapped_column(Text, nullable=True)
     due_date: Mapped[date | None] = mapped_column(Date, nullable=True)
